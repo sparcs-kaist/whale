@@ -54,7 +54,7 @@
             <div class="col-sm-12">
               <label for="ownership" class="control-label text-left">
                 Ownership
-                <portainer-tooltip position="bottom" message="When setting the ownership value to private, only you and the administrators will be able to see and manage this object. When choosing public, everybody will be able to access it."></portainer-tooltip>
+                <whale-tooltip position="bottom" message="When setting the ownership value to private, only you and the administrators will be able to see and manage this object. When choosing public, everybody will be able to access it."></whale-tooltip>
               </label>
               <div class="btn-group btn-group-sm" style="margin-left: 20px;">
                 <label class="btn btn-primary" ng-model="formValues.Ownership" uib-btn-radio="'private'">Private</label>
@@ -84,7 +84,7 @@
                 </span>
               </div>
               <div class="col-sm-12" style="margin-top: 10px" ng-if="state.selectedTemplate.Ports.length > 0">
-                <span class="small text-muted">Portainer will automatically assign a port if you leave the host port empty.</span>
+                <span class="small text-muted">Whale will automatically assign a port if you leave the host port empty.</span>
               </div>
               <!-- !port-mapping -->
               <!-- port-mapping-input-list -->
@@ -132,7 +132,7 @@
                 </span>
               </div>
               <div class="col-sm-12" style="margin-top: 10px" ng-if="state.selectedTemplate.Volumes.length > 0">
-                <span class="small text-muted">Portainer will automatically create and map a local volume when using the <b>auto</b> option.</span>
+                <span class="small text-muted">Whale will automatically create and map a local volume when using the <b>auto</b> option.</span>
               </div>
               <div ng-repeat="volume in state.selectedTemplate.Volumes">
                 <div class="col-sm-12" style="margin-top: 10px;">

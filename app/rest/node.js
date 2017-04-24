@@ -1,4 +1,4 @@
-angular.module('portainer.rest')
+angular.module('whale.rest')
 .factory('Node', ['$resource', 'Settings', 'EndpointProvider', function NodeFactory($resource, Settings, EndpointProvider) {
   'use strict';
   return $resource(Settings.url + '/:endpointId/nodes/:id/:action', {

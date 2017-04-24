@@ -1,24 +1,24 @@
 package http
 
 import (
-	"github.com/portainer/portainer"
+	"github.com/sparcs-kaist/whale"
 
 	"net/http"
 )
 
-// Server implements the portainer.Server interface
+// Server implements the whale.Server interface
 type Server struct {
 	BindAddress            string
 	AssetsPath             string
 	AuthDisabled           bool
 	EndpointManagement     bool
-	UserService            portainer.UserService
-	EndpointService        portainer.EndpointService
-	ResourceControlService portainer.ResourceControlService
-	CryptoService          portainer.CryptoService
-	JWTService             portainer.JWTService
-	FileService            portainer.FileService
-	Settings               *portainer.Settings
+	UserService            whale.UserService
+	EndpointService        whale.EndpointService
+	ResourceControlService whale.ResourceControlService
+	CryptoService          whale.CryptoService
+	JWTService             whale.JWTService
+	FileService            whale.FileService
+	Settings               *whale.Settings
 	TemplatesURL           string
 	Handler                *Handler
 }

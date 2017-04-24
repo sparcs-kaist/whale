@@ -1,4 +1,4 @@
-angular.module('portainer.rest')
+angular.module('whale.rest')
 .factory('ContainerTop', ['$http', 'Settings', 'EndpointProvider', function ($http, Settings, EndpointProvider) {
   'use strict';
   return {

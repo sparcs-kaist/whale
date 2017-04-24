@@ -1,4 +1,4 @@
-angular.module('portainer.rest')
+angular.module('whale.rest')
 .factory('Image', ['$resource', 'Settings', 'EndpointProvider', function ImageFactory($resource, Settings, EndpointProvider) {
   'use strict';
   return $resource(Settings.url + '/:endpointId/images/:id/:action', {

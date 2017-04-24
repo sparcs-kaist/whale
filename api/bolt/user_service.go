@@ -1,8 +1,8 @@
 package bolt
 
 import (
-	"github.com/portainer/portainer"
-	"github.com/portainer/portainer/bolt/internal"
+	"github.com/sparcs-kaist/whale"
+	"github.com/sparcs-kaist/whale/bolt/internal"
 
 	"github.com/boltdb/bolt"
 )
@@ -13,13 +13,13 @@ type UserService struct {
 }
 
 // User returns a user by ID
-func (service *UserService) User(ID portainer.UserID) (*portainer.User, error) {
+func (service *UserService) User(ID whale.UserID) (*whale.User, error) {
 	var data []byte
 	err := service.store.db.View(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket([]byte(userBucketName))
 		value := bucket.Get(internal.Itob(int(ID)))
 		if value == nil {
-			return portainer.ErrUserNotFound
+			return whale.ErrUserNotFound
 		}
 
 		data = make([]byte, len(value))
@@ -30,7 +30,7 @@ func (service *UserService) User(ID portainer.UserID) (*portainer.User, error) {
 		return nil, err
 	}
 
-	var user portainer.User
+	var user whale.User
 	err = internal.UnmarshalUser(data, &user)
 	if err != nil {
 		return nil, err
@@ -39,14 +39,14 @@ func (service *UserService) User(ID portainer.UserID) (*portainer.User, error) {
 }
 
 // UserByUsername returns a user by username.
-func (service *UserService) UserByUsername(username string) (*portainer.User, error) {
-	var user *portainer.User
+func (service *UserService) UserByUsername(username string) (*whale.User, error) {
+	var user *whale.User
 
 	err := service.store.db.View(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket([]byte(userBucketName))
 		cursor := bucket.Cursor()
 		for k, v := cursor.First(); k != nil; k, v = cursor.Next() {
-			var u portainer.User
+			var u whale.User
 			err := internal.UnmarshalUser(v, &u)
 			if err != nil {
 				return err
@@ -57,7 +57,7 @@ func (service *UserService) UserByUsername(username string) (*portainer.User, er
 		}
 
 		if user == nil {
-			return portainer.ErrUserNotFound
+			return whale.ErrUserNotFound
 		}
 		return nil
 	})
@@ -68,14 +68,14 @@ func (service *UserService) UserByUsername(username string) (*portainer.User, er
 }
 
 // Users return an array containing all the users.
-func (service *UserService) Users() ([]portainer.User, error) {
-	var users = make([]portainer.User, 0)
+func (service *UserService) Users() ([]whale.User, error) {
+	var users = make([]whale.User, 0)
 	err := service.store.db.View(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket([]byte(userBucketName))
 
 		cursor := bucket.Cursor()
 		for k, v := cursor.First(); k != nil; k, v = cursor.Next() {
-			var user portainer.User
+			var user whale.User
 			err := internal.UnmarshalUser(v, &user)
 			if err != nil {
 				return err
@@ -93,14 +93,14 @@ func (service *UserService) Users() ([]portainer.User, error) {
 }
 
 // UsersByRole return an array containing all the users with the specified role.
-func (service *UserService) UsersByRole(role portainer.UserRole) ([]portainer.User, error) {
-	var users = make([]portainer.User, 0)
+func (service *UserService) UsersByRole(role whale.UserRole) ([]whale.User, error) {
+	var users = make([]whale.User, 0)
 	err := service.store.db.View(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket([]byte(userBucketName))
 
 		cursor := bucket.Cursor()
 		for k, v := cursor.First(); k != nil; k, v = cursor.Next() {
-			var user portainer.User
+			var user whale.User
 			err := internal.UnmarshalUser(v, &user)
 			if err != nil {
 				return err
@@ -119,7 +119,7 @@ func (service *UserService) UsersByRole(role portainer.UserRole) ([]portainer.Us
 }
 
 // UpdateUser saves a user.
-func (service *UserService) UpdateUser(ID portainer.UserID, user *portainer.User) error {
+func (service *UserService) UpdateUser(ID whale.UserID, user *whale.User) error {
 	data, err := internal.MarshalUser(user)
 	if err != nil {
 		return err
@@ -137,12 +137,12 @@ func (service *UserService) UpdateUser(ID portainer.UserID, user *portainer.User
 }
 
 // CreateUser creates a new user.
-func (service *UserService) CreateUser(user *portainer.User) error {
+func (service *UserService) CreateUser(user *whale.User) error {
 	return service.store.db.Update(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket([]byte(userBucketName))
 
 		id, _ := bucket.NextSequence()
-		user.ID = portainer.UserID(id)
+		user.ID = whale.UserID(id)
 
 		data, err := internal.MarshalUser(user)
 		if err != nil {
@@ -158,7 +158,7 @@ func (service *UserService) CreateUser(user *portainer.User) error {
 }
 
 // DeleteUser deletes a user.
-func (service *UserService) DeleteUser(ID portainer.UserID) error {
+func (service *UserService) DeleteUser(ID whale.UserID) error {
 	return service.store.db.Update(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket([]byte(userBucketName))
 		err := bucket.Delete(internal.Itob(int(ID)))

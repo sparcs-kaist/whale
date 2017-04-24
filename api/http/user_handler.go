@@ -3,7 +3,7 @@ package http
 import (
 	"strconv"
 
-	"github.com/portainer/portainer"
+	"github.com/sparcs-kaist/whale"
 
 	"encoding/json"
 	"log"
@@ -18,9 +18,9 @@ import (
 type UserHandler struct {
 	*mux.Router
 	Logger                 *log.Logger
-	UserService            portainer.UserService
-	ResourceControlService portainer.ResourceControlService
-	CryptoService          portainer.CryptoService
+	UserService            whale.UserService
+	ResourceControlService whale.ResourceControlService
+	CryptoService          whale.CryptoService
 }
 
 // NewUserHandler returns a new instance of UserHandler.
@@ -67,30 +67,30 @@ func (handler *UserHandler) handlePostUsers(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	var role portainer.UserRole
+	var role whale.UserRole
 	if req.Role == 1 {
-		role = portainer.AdministratorRole
+		role = whale.AdministratorRole
 	} else {
-		role = portainer.StandardUserRole
+		role = whale.StandardUserRole
 	}
 
 	user, err := handler.UserService.UserByUsername(req.Username)
-	if err != nil && err != portainer.ErrUserNotFound {
+	if err != nil && err != whale.ErrUserNotFound {
 		Error(w, err, http.StatusInternalServerError, handler.Logger)
 		return
 	}
 	if user != nil {
-		Error(w, portainer.ErrUserAlreadyExists, http.StatusConflict, handler.Logger)
+		Error(w, whale.ErrUserAlreadyExists, http.StatusConflict, handler.Logger)
 		return
 	}
 
-	user = &portainer.User{
+	user = &whale.User{
 		Username: req.Username,
 		Role:     role,
 	}
 	user.Password, err = handler.CryptoService.Hash(req.Password)
 	if err != nil {
-		Error(w, portainer.ErrCryptoHashFailure, http.StatusBadRequest, handler.Logger)
+		Error(w, whale.ErrCryptoHashFailure, http.StatusBadRequest, handler.Logger)
 		return
 	}
 
@@ -151,8 +151,8 @@ func (handler *UserHandler) handlePostUserPasswd(w http.ResponseWriter, r *http.
 
 	var password = req.Password
 
-	u, err := handler.UserService.User(portainer.UserID(userID))
-	if err == portainer.ErrUserNotFound {
+	u, err := handler.UserService.User(whale.UserID(userID))
+	if err == whale.ErrUserNotFound {
 		Error(w, err, http.StatusNotFound, handler.Logger)
 		return
 	} else if err != nil {
@@ -188,8 +188,8 @@ func (handler *UserHandler) handleGetUser(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	user, err := handler.UserService.User(portainer.UserID(userID))
-	if err == portainer.ErrUserNotFound {
+	user, err := handler.UserService.User(whale.UserID(userID))
+	if err == whale.ErrUserNotFound {
 		Error(w, err, http.StatusNotFound, handler.Logger)
 		return
 	} else if err != nil {
@@ -217,8 +217,8 @@ func (handler *UserHandler) handlePutUser(w http.ResponseWriter, r *http.Request
 		Error(w, err, http.StatusInternalServerError, handler.Logger)
 	}
 
-	if tokenData.Role != portainer.AdministratorRole && tokenData.ID != portainer.UserID(userID) {
-		Error(w, portainer.ErrUnauthorized, http.StatusForbidden, handler.Logger)
+	if tokenData.Role != whale.AdministratorRole && tokenData.ID != whale.UserID(userID) {
+		Error(w, whale.ErrUnauthorized, http.StatusForbidden, handler.Logger)
 		return
 	}
 
@@ -239,8 +239,8 @@ func (handler *UserHandler) handlePutUser(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	user, err := handler.UserService.User(portainer.UserID(userID))
-	if err == portainer.ErrUserNotFound {
+	user, err := handler.UserService.User(whale.UserID(userID))
+	if err == whale.ErrUserNotFound {
 		Error(w, err, http.StatusNotFound, handler.Logger)
 		return
 	} else if err != nil {
@@ -251,20 +251,20 @@ func (handler *UserHandler) handlePutUser(w http.ResponseWriter, r *http.Request
 	if req.Password != "" {
 		user.Password, err = handler.CryptoService.Hash(req.Password)
 		if err != nil {
-			Error(w, portainer.ErrCryptoHashFailure, http.StatusBadRequest, handler.Logger)
+			Error(w, whale.ErrCryptoHashFailure, http.StatusBadRequest, handler.Logger)
 			return
 		}
 	}
 
 	if req.Role != 0 {
-		if tokenData.Role != portainer.AdministratorRole {
-			Error(w, portainer.ErrUnauthorized, http.StatusForbidden, handler.Logger)
+		if tokenData.Role != whale.AdministratorRole {
+			Error(w, whale.ErrUnauthorized, http.StatusForbidden, handler.Logger)
 			return
 		}
 		if req.Role == 1 {
-			user.Role = portainer.AdministratorRole
+			user.Role = whale.AdministratorRole
 		} else {
-			user.Role = portainer.StandardUserRole
+			user.Role = whale.StandardUserRole
 		}
 	}
 
@@ -287,13 +287,13 @@ func (handler *UserHandler) handleGetAdminCheck(w http.ResponseWriter, r *http.R
 		return
 	}
 
-	users, err := handler.UserService.UsersByRole(portainer.AdministratorRole)
+	users, err := handler.UserService.UsersByRole(whale.AdministratorRole)
 	if err != nil {
 		Error(w, err, http.StatusInternalServerError, handler.Logger)
 		return
 	}
 	if len(users) == 0 {
-		Error(w, portainer.ErrUserNotFound, http.StatusNotFound, handler.Logger)
+		Error(w, whale.ErrUserNotFound, http.StatusNotFound, handler.Logger)
 		return
 	}
 }
@@ -318,14 +318,14 @@ func (handler *UserHandler) handlePostAdminInit(w http.ResponseWriter, r *http.R
 	}
 
 	user, err := handler.UserService.UserByUsername("admin")
-	if err == portainer.ErrUserNotFound {
-		user := &portainer.User{
+	if err == whale.ErrUserNotFound {
+		user := &whale.User{
 			Username: "admin",
-			Role:     portainer.AdministratorRole,
+			Role:     whale.AdministratorRole,
 		}
 		user.Password, err = handler.CryptoService.Hash(req.Password)
 		if err != nil {
-			Error(w, portainer.ErrCryptoHashFailure, http.StatusBadRequest, handler.Logger)
+			Error(w, whale.ErrCryptoHashFailure, http.StatusBadRequest, handler.Logger)
 			return
 		}
 
@@ -339,7 +339,7 @@ func (handler *UserHandler) handlePostAdminInit(w http.ResponseWriter, r *http.R
 		return
 	}
 	if user != nil {
-		Error(w, portainer.ErrAdminAlreadyInitialized, http.StatusForbidden, handler.Logger)
+		Error(w, whale.ErrAdminAlreadyInitialized, http.StatusForbidden, handler.Logger)
 		return
 	}
 }
@@ -359,9 +359,9 @@ func (handler *UserHandler) handleDeleteUser(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	_, err = handler.UserService.User(portainer.UserID(userID))
+	_, err = handler.UserService.User(whale.UserID(userID))
 
-	if err == portainer.ErrUserNotFound {
+	if err == whale.ErrUserNotFound {
 		Error(w, err, http.StatusNotFound, handler.Logger)
 		return
 	} else if err != nil {
@@ -369,7 +369,7 @@ func (handler *UserHandler) handleDeleteUser(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	err = handler.UserService.DeleteUser(portainer.UserID(userID))
+	err = handler.UserService.DeleteUser(whale.UserID(userID))
 	if err != nil {
 		Error(w, err, http.StatusInternalServerError, handler.Logger)
 		return
@@ -388,13 +388,13 @@ func (handler *UserHandler) handlePostUserResource(w http.ResponseWriter, r *htt
 		return
 	}
 
-	var rcType portainer.ResourceControlType
+	var rcType whale.ResourceControlType
 	if resourceType == "container" {
-		rcType = portainer.ContainerResourceControl
+		rcType = whale.ContainerResourceControl
 	} else if resourceType == "service" {
-		rcType = portainer.ServiceResourceControl
+		rcType = whale.ServiceResourceControl
 	} else if resourceType == "volume" {
-		rcType = portainer.VolumeResourceControl
+		rcType = whale.VolumeResourceControl
 	} else {
 		Error(w, ErrInvalidQueryFormat, http.StatusBadRequest, handler.Logger)
 		return
@@ -404,8 +404,8 @@ func (handler *UserHandler) handlePostUserResource(w http.ResponseWriter, r *htt
 	if err != nil {
 		Error(w, err, http.StatusInternalServerError, handler.Logger)
 	}
-	if tokenData.ID != portainer.UserID(uid) {
-		Error(w, portainer.ErrResourceAccessDenied, http.StatusForbidden, handler.Logger)
+	if tokenData.ID != whale.UserID(uid) {
+		Error(w, whale.ErrResourceAccessDenied, http.StatusForbidden, handler.Logger)
 		return
 	}
 
@@ -421,10 +421,10 @@ func (handler *UserHandler) handlePostUserResource(w http.ResponseWriter, r *htt
 		return
 	}
 
-	resource := portainer.ResourceControl{
-		OwnerID:     portainer.UserID(uid),
+	resource := whale.ResourceControl{
+		OwnerID:     whale.UserID(uid),
 		ResourceID:  req.ResourceID,
-		AccessLevel: portainer.RestrictedResourceAccessLevel,
+		AccessLevel: whale.RestrictedResourceAccessLevel,
 	}
 
 	err = handler.ResourceControlService.CreateResourceControl(req.ResourceID, &resource, rcType)
@@ -451,13 +451,13 @@ func (handler *UserHandler) handleDeleteUserResource(w http.ResponseWriter, r *h
 		return
 	}
 
-	var rcType portainer.ResourceControlType
+	var rcType whale.ResourceControlType
 	if resourceType == "container" {
-		rcType = portainer.ContainerResourceControl
+		rcType = whale.ContainerResourceControl
 	} else if resourceType == "service" {
-		rcType = portainer.ServiceResourceControl
+		rcType = whale.ServiceResourceControl
 	} else if resourceType == "volume" {
-		rcType = portainer.VolumeResourceControl
+		rcType = whale.VolumeResourceControl
 	} else {
 		Error(w, ErrInvalidQueryFormat, http.StatusBadRequest, handler.Logger)
 		return
@@ -467,8 +467,8 @@ func (handler *UserHandler) handleDeleteUserResource(w http.ResponseWriter, r *h
 	if err != nil {
 		Error(w, err, http.StatusInternalServerError, handler.Logger)
 	}
-	if tokenData.Role != portainer.AdministratorRole && tokenData.ID != portainer.UserID(uid) {
-		Error(w, portainer.ErrResourceAccessDenied, http.StatusForbidden, handler.Logger)
+	if tokenData.Role != whale.AdministratorRole && tokenData.ID != whale.UserID(uid) {
+		Error(w, whale.ErrResourceAccessDenied, http.StatusForbidden, handler.Logger)
 		return
 	}
 

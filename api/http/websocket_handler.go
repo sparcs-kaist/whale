@@ -16,7 +16,7 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/portainer/portainer"
+	"github.com/sparcs-kaist/whale"
 	"golang.org/x/net/websocket"
 )
 
@@ -24,7 +24,7 @@ import (
 type WebSocketHandler struct {
 	*mux.Router
 	Logger          *log.Logger
-	EndpointService portainer.EndpointService
+	EndpointService whale.EndpointService
 }
 
 // NewWebSocketHandler returns a new instance of WebSocketHandler.
@@ -48,7 +48,7 @@ func (handler *WebSocketHandler) webSocketDockerExec(ws *websocket.Conn) {
 		return
 	}
 
-	endpointID := portainer.EndpointID(parsedID)
+	endpointID := whale.EndpointID(parsedID)
 	endpoint, err := handler.EndpointService.Endpoint(endpointID)
 	if err != nil {
 		log.Printf("Unable to retrieve endpoint: %s", err)

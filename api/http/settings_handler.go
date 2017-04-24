@@ -1,7 +1,7 @@
 package http
 
 import (
-	"github.com/portainer/portainer"
+	"github.com/sparcs-kaist/whale"
 
 	"log"
 	"net/http"
@@ -14,7 +14,7 @@ import (
 type SettingsHandler struct {
 	*mux.Router
 	Logger   *log.Logger
-	settings *portainer.Settings
+	settings *whale.Settings
 }
 
 // NewSettingsHandler returns a new instance of SettingsHandler.

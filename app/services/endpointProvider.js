@@ -1,4 +1,4 @@
-angular.module('portainer.services')
+angular.module('whale.services')
 .factory('EndpointProvider', ['LocalStorage', function EndpointProviderFactory(LocalStorage) {
   'use strict';
   var endpoint = {};

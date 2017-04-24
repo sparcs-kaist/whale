@@ -103,7 +103,7 @@ function ($scope, $state, UserService, ModalService, Messages, Pagination) {
 
   $scope.removeAction = function () {
     ModalService.confirmDeletion(
-      'Do you want to delete the selected users? They will not be able to login into Portainer anymore.',
+      'Do you want to delete the selected users? They will not be able to login into Whale anymore.',
       function onConfirm(confirmed) {
         if(!confirmed) { return; }
         deleteSelectedUsers();

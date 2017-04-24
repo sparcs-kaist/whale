@@ -24,7 +24,7 @@
           <div class="form-group">
             <label for="endpoint_url" class="col-sm-3 col-lg-2 control-label text-left">
               Endpoint URL
-              <portainer-tooltip position="bottom" message="URL or IP address of a Docker host. The Docker API must be exposed over a TCP port. Please refer to the Docker documentation to configure it."></portainer-tooltip>
+              <whale-tooltip position="bottom" message="URL or IP address of a Docker host. The Docker API must be exposed over a TCP port. Please refer to the Docker documentation to configure it."></whale-tooltip>
             </label>
             <div class="col-sm-9 col-lg-10">
               <input ng-disabled="endpointType === 'local'" type="text" class="form-control" id="endpoint_url" ng-model="endpoint.URL" placeholder="e.g. 10.0.0.10:2375 or mydocker.mydomain.com:2375">
@@ -36,7 +36,7 @@
             <div class="col-sm-12">
               <label for="tls" class="control-label text-left">
                 TLS
-                <portainer-tooltip position="bottom" message="Enable this option if you need to specify TLS certificates to connect to the Docker endpoint."></portainer-tooltip>
+                <whale-tooltip position="bottom" message="Enable this option if you need to specify TLS certificates to connect to the Docker endpoint."></whale-tooltip>
               </label>
               <label class="switch" style="margin-left: 20px;">
                 <input type="checkbox" ng-model="endpoint.TLS"><i></i>

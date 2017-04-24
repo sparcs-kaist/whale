@@ -1,4 +1,4 @@
-package portainer
+package whale
 
 import (
 	"io"
@@ -30,7 +30,7 @@ type (
 		TLSKey            *string
 	}
 
-	// Settings represents Portainer settings.
+	// Settings represents Whale settings.
 	Settings struct {
 		HiddenLabels       []Pair `json:"hiddenLabels"`
 		Logo               string `json:"logo"`
@@ -175,9 +175,9 @@ type (
 )
 
 const (
-	// APIVersion is the version number of Portainer API.
+	// APIVersion is the version number of Whale API.
 	APIVersion = "1.12.4"
-	// DBVersion is the version number of Portainer database.
+	// DBVersion is the version number of Whale database.
 	DBVersion = 1
 )
 

@@ -1,4 +1,4 @@
-angular.module('portainer.services')
+angular.module('whale.services')
 .factory('Messages', ['$sanitize', function MessagesFactory($sanitize) {
   'use strict';
   return {

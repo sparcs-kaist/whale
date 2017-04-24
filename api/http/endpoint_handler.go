@@ -1,7 +1,7 @@
 package http
 
 import (
-	"github.com/portainer/portainer"
+	"github.com/sparcs-kaist/whale"
 
 	"encoding/json"
 	"log"
@@ -18,14 +18,14 @@ type EndpointHandler struct {
 	*mux.Router
 	Logger                      *log.Logger
 	authorizeEndpointManagement bool
-	EndpointService             portainer.EndpointService
-	FileService                 portainer.FileService
+	EndpointService             whale.EndpointService
+	FileService                 whale.FileService
 }
 
 const (
 	// ErrEndpointManagementDisabled is an error raised when trying to access the endpoints management endpoints
 	// when the server has been started with the --external-endpoints flag
-	ErrEndpointManagementDisabled = portainer.Error("Endpoint management is disabled")
+	ErrEndpointManagementDisabled = whale.Error("Endpoint management is disabled")
 )
 
 // NewEndpointHandler returns a new instance of EndpointHandler.
@@ -63,13 +63,13 @@ func (handler *EndpointHandler) handleGetEndpoints(w http.ResponseWriter, r *htt
 		Error(w, err, http.StatusInternalServerError, handler.Logger)
 	}
 	if tokenData == nil {
-		Error(w, portainer.ErrInvalidJWTToken, http.StatusBadRequest, handler.Logger)
+		Error(w, whale.ErrInvalidJWTToken, http.StatusBadRequest, handler.Logger)
 		return
 	}
 
-	var allowedEndpoints []portainer.Endpoint
-	if tokenData.Role != portainer.AdministratorRole {
-		allowedEndpoints = make([]portainer.Endpoint, 0)
+	var allowedEndpoints []whale.Endpoint
+	if tokenData.Role != whale.AdministratorRole {
+		allowedEndpoints = make([]whale.Endpoint, 0)
 		for _, endpoint := range endpoints {
 			for _, authorizedUserID := range endpoint.AuthorizedUsers {
 				if authorizedUserID == tokenData.ID {
@@ -104,11 +104,11 @@ func (handler *EndpointHandler) handlePostEndpoints(w http.ResponseWriter, r *ht
 		return
 	}
 
-	endpoint := &portainer.Endpoint{
+	endpoint := &whale.Endpoint{
 		Name:            req.Name,
 		URL:             req.URL,
 		TLS:             req.TLS,
-		AuthorizedUsers: []portainer.UserID{},
+		AuthorizedUsers: []whale.UserID{},
 	}
 
 	err = handler.EndpointService.CreateEndpoint(endpoint)
@@ -118,11 +118,11 @@ func (handler *EndpointHandler) handlePostEndpoints(w http.ResponseWriter, r *ht
 	}
 
 	if req.TLS {
-		caCertPath, _ := handler.FileService.GetPathForTLSFile(endpoint.ID, portainer.TLSFileCA)
+		caCertPath, _ := handler.FileService.GetPathForTLSFile(endpoint.ID, whale.TLSFileCA)
 		endpoint.TLSCACertPath = caCertPath
-		certPath, _ := handler.FileService.GetPathForTLSFile(endpoint.ID, portainer.TLSFileCert)
+		certPath, _ := handler.FileService.GetPathForTLSFile(endpoint.ID, whale.TLSFileCert)
 		endpoint.TLSCertPath = certPath
-		keyPath, _ := handler.FileService.GetPathForTLSFile(endpoint.ID, portainer.TLSFileKey)
+		keyPath, _ := handler.FileService.GetPathForTLSFile(endpoint.ID, whale.TLSFileKey)
 		endpoint.TLSKeyPath = keyPath
 		err = handler.EndpointService.UpdateEndpoint(endpoint.ID, endpoint)
 		if err != nil {
@@ -155,8 +155,8 @@ func (handler *EndpointHandler) handleGetEndpoint(w http.ResponseWriter, r *http
 		return
 	}
 
-	endpoint, err := handler.EndpointService.Endpoint(portainer.EndpointID(endpointID))
-	if err == portainer.ErrEndpointNotFound {
+	endpoint, err := handler.EndpointService.Endpoint(whale.EndpointID(endpointID))
+	if err == whale.ErrEndpointNotFound {
 		Error(w, err, http.StatusNotFound, handler.Logger)
 		return
 	} else if err != nil {
@@ -190,8 +190,8 @@ func (handler *EndpointHandler) handlePutEndpointAccess(w http.ResponseWriter, r
 		return
 	}
 
-	endpoint, err := handler.EndpointService.Endpoint(portainer.EndpointID(endpointID))
-	if err == portainer.ErrEndpointNotFound {
+	endpoint, err := handler.EndpointService.Endpoint(whale.EndpointID(endpointID))
+	if err == whale.ErrEndpointNotFound {
 		Error(w, err, http.StatusNotFound, handler.Logger)
 		return
 	} else if err != nil {
@@ -199,9 +199,9 @@ func (handler *EndpointHandler) handlePutEndpointAccess(w http.ResponseWriter, r
 		return
 	}
 
-	authorizedUserIDs := []portainer.UserID{}
+	authorizedUserIDs := []whale.UserID{}
 	for _, value := range req.AuthorizedUsers {
-		authorizedUserIDs = append(authorizedUserIDs, portainer.UserID(value))
+		authorizedUserIDs = append(authorizedUserIDs, whale.UserID(value))
 	}
 	endpoint.AuthorizedUsers = authorizedUserIDs
 
@@ -244,8 +244,8 @@ func (handler *EndpointHandler) handlePutEndpoint(w http.ResponseWriter, r *http
 		return
 	}
 
-	endpoint, err := handler.EndpointService.Endpoint(portainer.EndpointID(endpointID))
-	if err == portainer.ErrEndpointNotFound {
+	endpoint, err := handler.EndpointService.Endpoint(whale.EndpointID(endpointID))
+	if err == whale.ErrEndpointNotFound {
 		Error(w, err, http.StatusNotFound, handler.Logger)
 		return
 	} else if err != nil {
@@ -263,11 +263,11 @@ func (handler *EndpointHandler) handlePutEndpoint(w http.ResponseWriter, r *http
 
 	if req.TLS {
 		endpoint.TLS = true
-		caCertPath, _ := handler.FileService.GetPathForTLSFile(endpoint.ID, portainer.TLSFileCA)
+		caCertPath, _ := handler.FileService.GetPathForTLSFile(endpoint.ID, whale.TLSFileCA)
 		endpoint.TLSCACertPath = caCertPath
-		certPath, _ := handler.FileService.GetPathForTLSFile(endpoint.ID, portainer.TLSFileCert)
+		certPath, _ := handler.FileService.GetPathForTLSFile(endpoint.ID, whale.TLSFileCert)
 		endpoint.TLSCertPath = certPath
-		keyPath, _ := handler.FileService.GetPathForTLSFile(endpoint.ID, portainer.TLSFileKey)
+		keyPath, _ := handler.FileService.GetPathForTLSFile(endpoint.ID, whale.TLSFileKey)
 		endpoint.TLSKeyPath = keyPath
 	} else {
 		endpoint.TLS = false
@@ -310,9 +310,9 @@ func (handler *EndpointHandler) handleDeleteEndpoint(w http.ResponseWriter, r *h
 		return
 	}
 
-	endpoint, err := handler.EndpointService.Endpoint(portainer.EndpointID(endpointID))
+	endpoint, err := handler.EndpointService.Endpoint(whale.EndpointID(endpointID))
 
-	if err == portainer.ErrEndpointNotFound {
+	if err == whale.ErrEndpointNotFound {
 		Error(w, err, http.StatusNotFound, handler.Logger)
 		return
 	} else if err != nil {
@@ -320,14 +320,14 @@ func (handler *EndpointHandler) handleDeleteEndpoint(w http.ResponseWriter, r *h
 		return
 	}
 
-	err = handler.EndpointService.DeleteEndpoint(portainer.EndpointID(endpointID))
+	err = handler.EndpointService.DeleteEndpoint(whale.EndpointID(endpointID))
 	if err != nil {
 		Error(w, err, http.StatusInternalServerError, handler.Logger)
 		return
 	}
 
 	if endpoint.TLS {
-		err = handler.FileService.DeleteTLSFiles(portainer.EndpointID(endpointID))
+		err = handler.FileService.DeleteTLSFiles(whale.EndpointID(endpointID))
 		if err != nil {
 			Error(w, err, http.StatusInternalServerError, handler.Logger)
 		}

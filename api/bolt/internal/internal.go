@@ -1,39 +1,39 @@
 package internal
 
 import (
-	"github.com/portainer/portainer"
+	"github.com/sparcs-kaist/whale"
 
 	"encoding/binary"
 	"encoding/json"
 )
 
 // MarshalUser encodes a user to binary format.
-func MarshalUser(user *portainer.User) ([]byte, error) {
+func MarshalUser(user *whale.User) ([]byte, error) {
 	return json.Marshal(user)
 }
 
 // UnmarshalUser decodes a user from a binary data.
-func UnmarshalUser(data []byte, user *portainer.User) error {
+func UnmarshalUser(data []byte, user *whale.User) error {
 	return json.Unmarshal(data, user)
 }
 
 // MarshalEndpoint encodes an endpoint to binary format.
-func MarshalEndpoint(endpoint *portainer.Endpoint) ([]byte, error) {
+func MarshalEndpoint(endpoint *whale.Endpoint) ([]byte, error) {
 	return json.Marshal(endpoint)
 }
 
 // UnmarshalEndpoint decodes an endpoint from a binary data.
-func UnmarshalEndpoint(data []byte, endpoint *portainer.Endpoint) error {
+func UnmarshalEndpoint(data []byte, endpoint *whale.Endpoint) error {
 	return json.Unmarshal(data, endpoint)
 }
 
 // MarshalResourceControl encodes a resource control object to binary format.
-func MarshalResourceControl(rc *portainer.ResourceControl) ([]byte, error) {
+func MarshalResourceControl(rc *whale.ResourceControl) ([]byte, error) {
 	return json.Marshal(rc)
 }
 
 // UnmarshalResourceControl decodes a resource control object from a binary data.
-func UnmarshalResourceControl(data []byte, rc *portainer.ResourceControl) error {
+func UnmarshalResourceControl(data []byte, rc *whale.ResourceControl) error {
 	return json.Unmarshal(data, rc)
 }
 

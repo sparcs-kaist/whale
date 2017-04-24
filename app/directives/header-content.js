@@ -1,5 +1,5 @@
 angular
-.module('portainer')
+.module('whale')
 .directive('rdHeaderContent', ['Authentication', function rdHeaderContent(Authentication) {
   var directive = {
     requires: '^rdHeader',

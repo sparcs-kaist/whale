@@ -3,7 +3,7 @@ package http
 import (
 	"strconv"
 
-	"github.com/portainer/portainer"
+	"github.com/sparcs-kaist/whale"
 
 	"log"
 	"net/http"
@@ -18,13 +18,13 @@ import (
 type DockerHandler struct {
 	*mux.Router
 	Logger          *log.Logger
-	EndpointService portainer.EndpointService
+	EndpointService whale.EndpointService
 	ProxyFactory    ProxyFactory
 	proxies         cmap.ConcurrentMap
 }
 
 // NewDockerHandler returns a new instance of DockerHandler.
-func NewDockerHandler(mw *middleWareService, resourceControlService portainer.ResourceControlService) *DockerHandler {
+func NewDockerHandler(mw *middleWareService, resourceControlService whale.ResourceControlService) *DockerHandler {
 	h := &DockerHandler{
 		Router: mux.NewRouter(),
 		Logger: log.New(os.Stderr, "", log.LstdFlags),
@@ -38,7 +38,7 @@ func NewDockerHandler(mw *middleWareService, resourceControlService portainer.Re
 	return h
 }
 
-func checkEndpointAccessControl(endpoint *portainer.Endpoint, userID portainer.UserID) bool {
+func checkEndpointAccessControl(endpoint *whale.Endpoint, userID whale.UserID) bool {
 	for _, authorizedUserID := range endpoint.AuthorizedUsers {
 		if authorizedUserID == userID {
 			return true
@@ -57,7 +57,7 @@ func (handler *DockerHandler) proxyRequestsToDockerAPI(w http.ResponseWriter, r 
 		return
 	}
 
-	endpointID := portainer.EndpointID(parsedID)
+	endpointID := whale.EndpointID(parsedID)
 	endpoint, err := handler.EndpointService.Endpoint(endpointID)
 	if err != nil {
 		Error(w, err, http.StatusInternalServerError, handler.Logger)
@@ -68,8 +68,8 @@ func (handler *DockerHandler) proxyRequestsToDockerAPI(w http.ResponseWriter, r 
 	if err != nil {
 		Error(w, err, http.StatusInternalServerError, handler.Logger)
 	}
-	if tokenData.Role != portainer.AdministratorRole && !checkEndpointAccessControl(endpoint, tokenData.ID) {
-		Error(w, portainer.ErrEndpointAccessDenied, http.StatusForbidden, handler.Logger)
+	if tokenData.Role != whale.AdministratorRole && !checkEndpointAccessControl(endpoint, tokenData.ID) {
+		Error(w, whale.ErrEndpointAccessDenied, http.StatusForbidden, handler.Logger)
 		return
 	}
 
@@ -87,7 +87,7 @@ func (handler *DockerHandler) proxyRequestsToDockerAPI(w http.ResponseWriter, r 
 	http.StripPrefix("/"+id, proxy).ServeHTTP(w, r)
 }
 
-func (handler *DockerHandler) createAndRegisterEndpointProxy(endpoint *portainer.Endpoint) (http.Handler, error) {
+func (handler *DockerHandler) createAndRegisterEndpointProxy(endpoint *whale.Endpoint) (http.Handler, error) {
 	var proxy http.Handler
 
 	endpointURL, err := url.Parse(endpoint.URL)

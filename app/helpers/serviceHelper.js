@@ -1,4 +1,4 @@
-angular.module('portainer.helpers')
+angular.module('whale.helpers')
 .factory('ServiceHelper', [function ServiceHelperFactory() {
   'use strict';
   return {

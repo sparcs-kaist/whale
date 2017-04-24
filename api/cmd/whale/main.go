@@ -1,21 +1,21 @@
-package main // import "github.com/portainer/portainer"
+package main // import "github.com/sparcs-kaist/whale"
 
 import (
-	"github.com/portainer/portainer"
-	"github.com/portainer/portainer/bolt"
-	"github.com/portainer/portainer/cli"
-	"github.com/portainer/portainer/cron"
-	"github.com/portainer/portainer/crypto"
-	"github.com/portainer/portainer/file"
-	"github.com/portainer/portainer/http"
-	"github.com/portainer/portainer/jwt"
+	"github.com/sparcs-kaist/whale"
+	"github.com/sparcs-kaist/whale/bolt"
+	"github.com/sparcs-kaist/whale/cli"
+	"github.com/sparcs-kaist/whale/cron"
+	"github.com/sparcs-kaist/whale/crypto"
+	"github.com/sparcs-kaist/whale/file"
+	"github.com/sparcs-kaist/whale/http"
+	"github.com/sparcs-kaist/whale/jwt"
 
 	"log"
 )
 
-func initCLI() *portainer.CLIFlags {
-	var cli portainer.CLIService = &cli.Service{}
-	flags, err := cli.ParseFlags(portainer.APIVersion)
+func initCLI() *whale.CLIFlags {
+	var cli whale.CLIService = &cli.Service{}
+	flags, err := cli.ParseFlags(whale.APIVersion)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -27,7 +27,7 @@ func initCLI() *portainer.CLIFlags {
 	return flags
 }
 
-func initFileService(dataStorePath string) portainer.FileService {
+func initFileService(dataStorePath string) whale.FileService {
 	fileService, err := file.NewService(dataStorePath, "")
 	if err != nil {
 		log.Fatal(err)
@@ -53,7 +53,7 @@ func initStore(dataStorePath string) *bolt.Store {
 	return store
 }
 
-func initJWTService(authenticationEnabled bool) portainer.JWTService {
+func initJWTService(authenticationEnabled bool) whale.JWTService {
 	if authenticationEnabled {
 		jwtService, err := jwt.NewService()
 		if err != nil {
@@ -64,11 +64,11 @@ func initJWTService(authenticationEnabled bool) portainer.JWTService {
 	return nil
 }
 
-func initCryptoService() portainer.CryptoService {
+func initCryptoService() whale.CryptoService {
 	return &crypto.Service{}
 }
 
-func initEndpointWatcher(endpointService portainer.EndpointService, externalEnpointFile string, syncInterval string) bool {
+func initEndpointWatcher(endpointService whale.EndpointService, externalEnpointFile string, syncInterval string) bool {
 	authorizeEndpointMgmt := true
 	if externalEnpointFile != "" {
 		authorizeEndpointMgmt = false
@@ -82,8 +82,8 @@ func initEndpointWatcher(endpointService portainer.EndpointService, externalEnpo
 	return authorizeEndpointMgmt
 }
 
-func initSettings(authorizeEndpointMgmt bool, flags *portainer.CLIFlags) *portainer.Settings {
-	return &portainer.Settings{
+func initSettings(authorizeEndpointMgmt bool, flags *whale.CLIFlags) *whale.Settings {
+	return &whale.Settings{
 		HiddenLabels:       *flags.Labels,
 		Logo:               *flags.Logo,
 		Analytics:          !*flags.NoAnalytics,
@@ -92,7 +92,7 @@ func initSettings(authorizeEndpointMgmt bool, flags *portainer.CLIFlags) *portai
 	}
 }
 
-func retrieveFirstEndpointFromDatabase(endpointService portainer.EndpointService) *portainer.Endpoint {
+func retrieveFirstEndpointFromDatabase(endpointService whale.EndpointService) *whale.Endpoint {
 	endpoints, err := endpointService.Endpoints()
 	if err != nil {
 		log.Fatal(err)
@@ -117,13 +117,13 @@ func main() {
 	settings := initSettings(authorizeEndpointMgmt, flags)
 
 	if *flags.Endpoint != "" {
-		var endpoints []portainer.Endpoint
+		var endpoints []whale.Endpoint
 		endpoints, err := store.EndpointService.Endpoints()
 		if err != nil {
 			log.Fatal(err)
 		}
 		if len(endpoints) == 0 {
-			endpoint := &portainer.Endpoint{
+			endpoint := &whale.Endpoint{
 				Name:          "primary",
 				URL:           *flags.Endpoint,
 				TLS:           *flags.TLSVerify,
@@ -140,7 +140,7 @@ func main() {
 		}
 	}
 
-	var server portainer.Server = &http.Server{
+	var server whale.Server = &http.Server{
 		BindAddress:            *flags.Addr,
 		AssetsPath:             *flags.Assets,
 		Settings:               settings,
@@ -155,7 +155,7 @@ func main() {
 		FileService:            fileService,
 	}
 
-	log.Printf("Starting Portainer on %s", *flags.Addr)
+	log.Printf("Starting Whale on %s", *flags.Addr)
 	err := server.Start()
 	if err != nil {
 		log.Fatal(err)

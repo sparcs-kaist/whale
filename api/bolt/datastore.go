@@ -6,10 +6,10 @@ import (
 	"time"
 
 	"github.com/boltdb/bolt"
-	"github.com/portainer/portainer"
+	"github.com/sparcs-kaist/whale"
 )
 
-// Store defines the implementation of portainer.DataStore using
+// Store defines the implementation of whale.DataStore using
 // BoltDB as the storage system.
 type Store struct {
 	// Path where is stored the BoltDB database.
@@ -26,7 +26,7 @@ type Store struct {
 }
 
 const (
-	databaseFileName                   = "portainer.db"
+	databaseFileName                   = "whale.db"
 	versionBucketName                  = "version"
 	userBucketName                     = "users"
 	endpointBucketName                 = "endpoints"
@@ -109,7 +109,7 @@ func (store *Store) Close() error {
 // MigrateData automatically migrate the data based on the DBVersion.
 func (store *Store) MigrateData() error {
 	if !store.checkForDataMigration {
-		err := store.VersionService.StoreDBVersion(portainer.DBVersion)
+		err := store.VersionService.StoreDBVersion(whale.DBVersion)
 		if err != nil {
 			return err
 		}
@@ -117,14 +117,14 @@ func (store *Store) MigrateData() error {
 	}
 
 	version, err := store.VersionService.DBVersion()
-	if err == portainer.ErrDBVersionNotFound {
+	if err == whale.ErrDBVersionNotFound {
 		version = 0
 	} else if err != nil {
 		return err
 	}
 
-	if version < portainer.DBVersion {
-		log.Printf("Migrating database from version %v to %v.\n", version, portainer.DBVersion)
+	if version < whale.DBVersion {
+		log.Printf("Migrating database from version %v to %v.\n", version, whale.DBVersion)
 		migrator := NewMigrator(store, version)
 		err = migrator.Migrate()
 		if err != nil {

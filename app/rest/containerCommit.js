@@ -1,4 +1,4 @@
-angular.module('portainer.rest')
+angular.module('whale.rest')
 .factory('ContainerCommit', ['$resource', 'Settings', 'EndpointProvider', function ContainerCommitFactory($resource, Settings, EndpointProvider) {
   'use strict';
   return $resource(Settings.url + '/:endpointId/commit', {

@@ -1,4 +1,4 @@
-angular.module('portainer.helpers')
+angular.module('whale.helpers')
 .factory('LabelHelper', [function LabelHelperFactory() {
   'use strict';
   return {

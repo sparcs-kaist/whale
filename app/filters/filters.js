@@ -1,4 +1,4 @@
-angular.module('portainer.filters', [])
+angular.module('whale.filters', [])
 .filter('truncate', function () {
   'use strict';
   return function (text, length, end) {

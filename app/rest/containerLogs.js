@@ -1,4 +1,4 @@
-angular.module('portainer.rest')
+angular.module('whale.rest')
 .factory('ContainerLogs', ['$http', 'Settings', 'EndpointProvider', function ContainerLogsFactory($http, Settings, EndpointProvider) {
   'use strict';
   return {

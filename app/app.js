@@ -1,8 +1,8 @@
-angular.module('portainer.filters', []);
-angular.module('portainer.rest', ['ngResource']);
-angular.module('portainer.services', []);
-angular.module('portainer.helpers', []);
-angular.module('portainer', [
+angular.module('whale.filters', []);
+angular.module('whale.rest', ['ngResource']);
+angular.module('whale.services', []);
+angular.module('whale.helpers', []);
+angular.module('whale', [
   'ui.bootstrap',
   'ui.router',
   'ui.select',
@@ -13,11 +13,11 @@ angular.module('portainer', [
   'LocalStorageModule',
   'angular-jwt',
   'angular-google-analytics',
-  'portainer.templates',
-  'portainer.filters',
-  'portainer.rest',
-  'portainer.helpers',
-  'portainer.services',
+  'whale.templates',
+  'whale.filters',
+  'whale.rest',
+  'whale.helpers',
+  'whale.services',
   'auth',
   'dashboard',
   'container',
@@ -56,7 +56,7 @@ angular.module('portainer', [
 
     localStorageServiceProvider
     .setStorageType('sessionStorage')
-    .setPrefix('portainer');
+    .setPrefix('whale');
 
     jwtOptionsProvider.config({
       tokenGetter: ['LocalStorage', function(LocalStorage) {

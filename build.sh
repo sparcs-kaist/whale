@@ -7,57 +7,57 @@ if [[ $# -ne 1 ]] ; then
   exit 1
 fi
 
-mkdir -pv /tmp/portainer-builds
+mkdir -pv /tmp/whale-builds
 
 grunt release
-docker build -t portainer/portainer:linux-amd64-${VERSION} -f build/linux/Dockerfile .
-docker push portainer/portainer:linux-amd64-${VERSION}
-docker build -t portainer/portainer:linux-amd64 -f build/linux/Dockerfile .
-docker push portainer/portainer:linux-amd64
-rm -rf /tmp/portainer-builds/unix && mkdir -pv /tmp/portainer-builds/unix/portainer
-mv dist/* /tmp/portainer-builds/unix/portainer
-cd /tmp/portainer-builds/unix
-tar cvpfz portainer-${VERSION}-linux-amd64.tar.gz portainer
-mv portainer-${VERSION}-linux-amd64.tar.gz /tmp/portainer-builds/
+docker build -t sparcs-kaist/whale:linux-amd64-${VERSION} -f build/linux/Dockerfile .
+docker push sparcs-kaist/whale:linux-amd64-${VERSION}
+docker build -t sparcs-kaist/whale:linux-amd64 -f build/linux/Dockerfile .
+docker push sparcs-kaist/whale:linux-amd64
+rm -rf /tmp/whale-builds/unix && mkdir -pv /tmp/whale-builds/unix/whale
+mv dist/* /tmp/whale-builds/unix/whale
+cd /tmp/whale-builds/unix
+tar cvpfz whale-${VERSION}-linux-amd64.tar.gz whale
+mv whale-${VERSION}-linux-amd64.tar.gz /tmp/whale-builds/
 cd -
 
 grunt release-arm
-docker build -t portainer/portainer:linux-arm-${VERSION} -f build/linux/Dockerfile .
-docker push portainer/portainer:linux-arm-${VERSION}
-docker build -t portainer/portainer:linux-arm -f build/linux/Dockerfile .
-docker push portainer/portainer:linux-arm
-rm -rf /tmp/portainer-builds/arm && mkdir -pv /tmp/portainer-builds/arm/portainer
-mv dist/* /tmp/portainer-builds/arm/portainer
-cd /tmp/portainer-builds/arm
-tar cvpfz portainer-${VERSION}-linux-arm.tar.gz portainer
-mv portainer-${VERSION}-linux-arm.tar.gz /tmp/portainer-builds/
+docker build -t sparcs-kaist/whale:linux-arm-${VERSION} -f build/linux/Dockerfile .
+docker push sparcs-kaist/whale:linux-arm-${VERSION}
+docker build -t sparcs-kaist/whale:linux-arm -f build/linux/Dockerfile .
+docker push sparcs-kaist/whale:linux-arm
+rm -rf /tmp/whale-builds/arm && mkdir -pv /tmp/whale-builds/arm/whale
+mv dist/* /tmp/whale-builds/arm/whale
+cd /tmp/whale-builds/arm
+tar cvpfz whale-${VERSION}-linux-arm.tar.gz whale
+mv whale-${VERSION}-linux-arm.tar.gz /tmp/whale-builds/
 cd -
 
 grunt release-arm64
-docker build -t portainer/portainer:linux-arm64-${VERSION} -f build/linux/Dockerfile .
-docker push portainer/portainer:linux-arm64-${VERSION}
-docker build -t portainer/portainer:linux-arm64 -f build/linux/Dockerfile .
-docker push portainer/portainer:linux-arm64
-rm -rf /tmp/portainer-builds/arm64 && mkdir -pv /tmp/portainer-builds/arm64/portainer
-mv dist/* /tmp/portainer-builds/arm64/portainer
-cd /tmp/portainer-builds/arm64
-tar cvpfz portainer-${VERSION}-linux-arm64.tar.gz portainer
-mv portainer-${VERSION}-linux-arm64.tar.gz /tmp/portainer-builds/
+docker build -t sparcs-kaist/whale:linux-arm64-${VERSION} -f build/linux/Dockerfile .
+docker push sparcs-kaist/whale:linux-arm64-${VERSION}
+docker build -t sparcs-kaist/whale:linux-arm64 -f build/linux/Dockerfile .
+docker push sparcs-kaist/whale:linux-arm64
+rm -rf /tmp/whale-builds/arm64 && mkdir -pv /tmp/whale-builds/arm64/whale
+mv dist/* /tmp/whale-builds/arm64/whale
+cd /tmp/whale-builds/arm64
+tar cvpfz whale-${VERSION}-linux-arm64.tar.gz whale
+mv whale-${VERSION}-linux-arm64.tar.gz /tmp/whale-builds/
 cd -
 
 grunt release-macos
-rm -rf /tmp/portainer-builds/darwin && mkdir -pv /tmp/portainer-builds/darwin/portainer
-mv dist/* /tmp/portainer-builds/darwin/portainer
-cd /tmp/portainer-builds/darwin
-tar cvpfz portainer-${VERSION}-darwin-amd64.tar.gz portainer
-mv portainer-${VERSION}-darwin-amd64.tar.gz /tmp/portainer-builds/
+rm -rf /tmp/whale-builds/darwin && mkdir -pv /tmp/whale-builds/darwin/whale
+mv dist/* /tmp/whale-builds/darwin/whale
+cd /tmp/whale-builds/darwin
+tar cvpfz whale-${VERSION}-darwin-amd64.tar.gz whale
+mv whale-${VERSION}-darwin-amd64.tar.gz /tmp/whale-builds/
 cd -
 
 grunt release-win
-rm -rf /tmp/portainer-builds/win && mkdir -pv /tmp/portainer-builds/win/portainer
-cp -r dist/* /tmp/portainer-builds/win/portainer
-cd /tmp/portainer-builds/win
-tar cvpfz portainer-${VERSION}-windows-amd64.tar.gz portainer
-mv portainer-${VERSION}-windows-amd64.tar.gz /tmp/portainer-builds/
+rm -rf /tmp/whale-builds/win && mkdir -pv /tmp/whale-builds/win/whale
+cp -r dist/* /tmp/whale-builds/win/whale
+cd /tmp/whale-builds/win
+tar cvpfz whale-${VERSION}-windows-amd64.tar.gz whale
+mv whale-${VERSION}-windows-amd64.tar.gz /tmp/whale-builds/
 
 exit 0

@@ -1,7 +1,7 @@
 package file
 
 import (
-	"github.com/portainer/portainer"
+	"github.com/sparcs-kaist/whale"
 
 	"io"
 	"os"
@@ -51,7 +51,7 @@ func NewService(dataStorePath, fileStorePath string) (*Service, error) {
 }
 
 // StoreTLSFile creates a subfolder in the TLSStorePath and stores a new file with the content from r.
-func (service *Service) StoreTLSFile(endpointID portainer.EndpointID, fileType portainer.TLSFileType, r io.Reader) error {
+func (service *Service) StoreTLSFile(endpointID whale.EndpointID, fileType whale.TLSFileType, r io.Reader) error {
 	ID := strconv.Itoa(int(endpointID))
 	endpointStorePath := path.Join(TLSStorePath, ID)
 	err := service.createDirectoryInStoreIfNotExist(endpointStorePath)
@@ -61,14 +61,14 @@ func (service *Service) StoreTLSFile(endpointID portainer.EndpointID, fileType p
 
 	var fileName string
 	switch fileType {
-	case portainer.TLSFileCA:
+	case whale.TLSFileCA:
 		fileName = TLSCACertFile
-	case portainer.TLSFileCert:
+	case whale.TLSFileCert:
 		fileName = TLSCertFile
-	case portainer.TLSFileKey:
+	case whale.TLSFileKey:
 		fileName = TLSKeyFile
 	default:
-		return portainer.ErrUndefinedTLSFileType
+		return whale.ErrUndefinedTLSFileType
 	}
 
 	tlsFilePath := path.Join(endpointStorePath, fileName)
@@ -80,24 +80,24 @@ func (service *Service) StoreTLSFile(endpointID portainer.EndpointID, fileType p
 }
 
 // GetPathForTLSFile returns the absolute path to a specific TLS file for an endpoint.
-func (service *Service) GetPathForTLSFile(endpointID portainer.EndpointID, fileType portainer.TLSFileType) (string, error) {
+func (service *Service) GetPathForTLSFile(endpointID whale.EndpointID, fileType whale.TLSFileType) (string, error) {
 	var fileName string
 	switch fileType {
-	case portainer.TLSFileCA:
+	case whale.TLSFileCA:
 		fileName = TLSCACertFile
-	case portainer.TLSFileCert:
+	case whale.TLSFileCert:
 		fileName = TLSCertFile
-	case portainer.TLSFileKey:
+	case whale.TLSFileKey:
 		fileName = TLSKeyFile
 	default:
-		return "", portainer.ErrUndefinedTLSFileType
+		return "", whale.ErrUndefinedTLSFileType
 	}
 	ID := strconv.Itoa(int(endpointID))
 	return path.Join(service.fileStorePath, TLSStorePath, ID, fileName), nil
 }
 
 // DeleteTLSFiles deletes a folder containing the TLS files for an endpoint.
-func (service *Service) DeleteTLSFiles(endpointID portainer.EndpointID) error {
+func (service *Service) DeleteTLSFiles(endpointID whale.EndpointID) error {
 	ID := strconv.Itoa(int(endpointID))
 	endpointPath := path.Join(service.fileStorePath, TLSStorePath, ID)
 	err := os.RemoveAll(endpointPath)

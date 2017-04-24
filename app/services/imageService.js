@@ -1,4 +1,4 @@
-angular.module('portainer.services')
+angular.module('whale.services')
 .factory('ImageService', ['$q', 'Image', 'ImageHelper', function ImageServiceFactory($q, Image, ImageHelper) {
   'use strict';
   var service = {};

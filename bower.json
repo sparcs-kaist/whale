@@ -1,11 +1,12 @@
 {
-  "name": "portainer",
-  "version": "1.12.4",
-  "homepage": "https://github.com/portainer/portainer",
+  "name": "whale",
+  "version": "0.1.0",
+  "homepage": "https://whale.sparcs.org/",
   "authors": [
+    "Whale Team <whale at sparcs dot org>",
     "Anthony Lapenna <anthony.lapenna at gmail dot com>"
   ],
-  "description": "A web interface for the Docker Remote API.",
+  "description": "SPARCS Docker Management System for Dev Servers",
   "keywords": [
     "docker",
     "ui",

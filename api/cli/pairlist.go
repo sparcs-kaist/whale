@@ -1,22 +1,22 @@
 package cli
 
 import (
-	"github.com/portainer/portainer"
+	"github.com/sparcs-kaist/whale"
 
 	"fmt"
 	"gopkg.in/alecthomas/kingpin.v2"
 	"strings"
 )
 
-type pairList []portainer.Pair
+type pairList []whale.Pair
 
-// Set implementation for a list of portainer.Pair
+// Set implementation for a list of whale.Pair
 func (l *pairList) Set(value string) error {
 	parts := strings.SplitN(value, "=", 2)
 	if len(parts) != 2 {
 		return fmt.Errorf("expected NAME=VALUE got '%s'", value)
 	}
-	p := new(portainer.Pair)
+	p := new(whale.Pair)
 	p.Name = parts[0]
 	p.Value = parts[1]
 	*l = append(*l, *p)
@@ -33,8 +33,8 @@ func (l *pairList) IsCumulative() bool {
 	return true
 }
 
-func pairs(s kingpin.Settings) (target *[]portainer.Pair) {
-	target = new([]portainer.Pair)
+func pairs(s kingpin.Settings) (target *[]whale.Pair) {
+	target = new([]whale.Pair)
 	s.SetValue((*pairList)(target))
 	return
 }

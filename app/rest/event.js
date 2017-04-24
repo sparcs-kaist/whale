@@ -1,4 +1,4 @@
-angular.module('portainer.rest')
+angular.module('whale.rest')
 .factory('Events', ['$resource', 'Settings', 'EndpointProvider', function EventFactory($resource, Settings, EndpointProvider) {
   'use strict';
   return $resource(Settings.url + '/:endpointId/events', {

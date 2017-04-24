@@ -1,4 +1,4 @@
-angular.module('portainer.services')
+angular.module('whale.services')
 .factory('ModalService', [function ModalServiceFactory() {
   'use strict';
   var service = {};

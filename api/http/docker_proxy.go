@@ -8,12 +8,12 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/portainer/portainer"
+	"github.com/sparcs-kaist/whale"
 )
 
 // ProxyFactory is a factory to create reverse proxies to Docker endpoints
 type ProxyFactory struct {
-	ResourceControlService portainer.ResourceControlService
+	ResourceControlService whale.ResourceControlService
 }
 
 // singleJoiningSlash from golang.org/src/net/http/httputil/reverseproxy.go
@@ -34,7 +34,7 @@ func singleJoiningSlash(a, b string) string {
 // NewSingleHostReverseProxyWithHostHeader is based on NewSingleHostReverseProxy
 // from golang.org/src/net/http/httputil/reverseproxy.go and merely sets the Host
 // HTTP header, which NewSingleHostReverseProxy deliberately preserves.
-// It also adds an extra Transport to the proxy to allow Portainer to rewrite the responses.
+// It also adds an extra Transport to the proxy to allow Whale to rewrite the responses.
 func (factory *ProxyFactory) newSingleHostReverseProxyWithHostHeader(target *url.URL) *httputil.ReverseProxy {
 	targetQuery := target.RawQuery
 	director := func(req *http.Request) {
@@ -64,7 +64,7 @@ func (factory *ProxyFactory) newHTTPProxy(u *url.URL) http.Handler {
 	return factory.newSingleHostReverseProxyWithHostHeader(u)
 }
 
-func (factory *ProxyFactory) newHTTPSProxy(u *url.URL, endpoint *portainer.Endpoint) (http.Handler, error) {
+func (factory *ProxyFactory) newHTTPSProxy(u *url.URL, endpoint *whale.Endpoint) (http.Handler, error) {
 	u.Scheme = "https"
 	proxy := factory.newSingleHostReverseProxyWithHostHeader(u)
 	config, err := createTLSConfiguration(endpoint.TLSCACertPath, endpoint.TLSCertPath, endpoint.TLSKeyPath)

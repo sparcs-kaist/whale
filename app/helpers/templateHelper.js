@@ -1,4 +1,4 @@
-angular.module('portainer.helpers')
+angular.module('whale.helpers')
 .factory('TemplateHelper', ['$filter', function TemplateHelperFactory($filter) {
   'use strict';
   var helper = {};

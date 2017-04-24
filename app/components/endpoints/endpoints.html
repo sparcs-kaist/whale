@@ -14,7 +14,7 @@
       <rd-widget-header icon="fa-exclamation-triangle" title="Endpoint management is not available">
       </rd-widget-header>
       <rd-widget-body>
-        <span class="small text-muted">Portainer has been started using the <code>--external-endpoints</code> flag. Endpoint management via the UI is disabled. You can still manage endpoint access.</span>
+        <span class="small text-muted">Whale has been started using the <code>--external-endpoints</code> flag. Endpoint management via the UI is disabled. You can still manage endpoint access.</span>
       </rd-wigdet-body>
     </rd-widget>
   </div>
@@ -39,7 +39,7 @@
           <div class="form-group">
             <label for="endpoint_url" class="col-sm-3 col-lg-2 control-label text-left">
               Endpoint URL
-              <portainer-tooltip position="bottom" message="URL or IP address of a Docker host. The Docker API must be exposed over a TCP port. Please refer to the Docker documentation to configure it."></portainer-tooltip>
+              <whale-tooltip position="bottom" message="URL or IP address of a Docker host. The Docker API must be exposed over a TCP port. Please refer to the Docker documentation to configure it."></whale-tooltip>
             </label>
             <div class="col-sm-9 col-lg-10">
               <input type="text" class="form-control" id="endpoint_url" ng-model="formValues.URL" placeholder="e.g. 10.0.0.10:2375 or mydocker.mydomain.com:2375">
@@ -51,7 +51,7 @@
             <div class="col-sm-12">
               <label for="tls" class="control-label text-left">
                 TLS
-                <portainer-tooltip position="bottom" message="Enable this option if you need to specify TLS certificates to connect to the Docker endpoint."></portainer-tooltip>
+                <whale-tooltip position="bottom" message="Enable this option if you need to specify TLS certificates to connect to the Docker endpoint."></whale-tooltip>
               </label>
               <label class="switch" style="margin-left: 20px;">
                 <input type="checkbox" ng-model="formValues.TLS"><i></i>

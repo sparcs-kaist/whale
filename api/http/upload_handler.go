@@ -1,7 +1,7 @@
 package http
 
 import (
-	"github.com/portainer/portainer"
+	"github.com/sparcs-kaist/whale"
 
 	"log"
 	"net/http"
@@ -15,7 +15,7 @@ import (
 type UploadHandler struct {
 	*mux.Router
 	Logger      *log.Logger
-	FileService portainer.FileService
+	FileService whale.FileService
 }
 
 // NewUploadHandler returns a new instance of UploadHandler.
@@ -51,20 +51,20 @@ func (handler *UploadHandler) handlePostUploadTLS(w http.ResponseWriter, r *http
 		return
 	}
 
-	var fileType portainer.TLSFileType
+	var fileType whale.TLSFileType
 	switch certificate {
 	case "ca":
-		fileType = portainer.TLSFileCA
+		fileType = whale.TLSFileCA
 	case "cert":
-		fileType = portainer.TLSFileCert
+		fileType = whale.TLSFileCert
 	case "key":
-		fileType = portainer.TLSFileKey
+		fileType = whale.TLSFileKey
 	default:
-		Error(w, portainer.ErrUndefinedTLSFileType, http.StatusInternalServerError, handler.Logger)
+		Error(w, whale.ErrUndefinedTLSFileType, http.StatusInternalServerError, handler.Logger)
 		return
 	}
 
-	err = handler.FileService.StoreTLSFile(portainer.EndpointID(ID), fileType, file)
+	err = handler.FileService.StoreTLSFile(whale.EndpointID(ID), fileType, file)
 	if err != nil {
 		Error(w, err, http.StatusInternalServerError, handler.Logger)
 	}

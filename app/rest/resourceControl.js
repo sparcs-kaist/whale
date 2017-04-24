@@ -1,4 +1,4 @@
-angular.module('portainer.rest')
+angular.module('whale.rest')
 .factory('ResourceControl', ['$resource', 'USERS_ENDPOINT', function ResourceControlFactory($resource, USERS_ENDPOINT) {
   'use strict';
   return $resource(USERS_ENDPOINT + '/:userId/resources/:resourceType/:resourceId', {}, {

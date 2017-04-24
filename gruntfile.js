@@ -157,7 +157,7 @@ module.exports = function (grunt) {
     },
     clean: {
       all: ['<%= distdir %>/*'],
-      app: ['<%= distdir %>/*', '!<%= distdir %>/portainer'],
+      app: ['<%= distdir %>/*', '!<%= distdir %>/whale'],
       tmpl: ['<%= distdir %>/templates'],
       tmp: ['<%= distdir %>/js/*', '!<%= distdir %>/js/app.*.js', '<%= distdir %>/css/*', '!<%= distdir %>/css/app.*.css']
     },
@@ -362,74 +362,74 @@ module.exports = function (grunt) {
     },
     shell: {
       buildImage: {
-        command: 'docker build --rm -t portainer -f build/linux/Dockerfile .'
+        command: 'sudo docker build --rm -t whale -f build/linux/Dockerfile .'
       },
       buildBinary: {
         command: [
-          'docker run --rm -v $(pwd)/api:/src portainer/golang-builder /src/cmd/portainer',
-          'shasum api/cmd/portainer/portainer > portainer-checksum.txt',
+          'sudo docker run --rm -v $(pwd)/api:/src sparcs-kaist/whale-builder /src/cmd/whale',
+          'shasum api/cmd/whale/whale > whale-checksum.txt',
           'mkdir -p dist',
-          'mv api/cmd/portainer/portainer dist/'
+          'mv api/cmd/whale/whale dist/'
         ].join(' && ')
       },
       buildUnixArmBinary: {
         command: [
-          'docker run --rm -v $(pwd)/api:/src -e BUILD_GOOS="linux" -e BUILD_GOARCH="arm" portainer/golang-builder:cross-platform /src/cmd/portainer',
-          'shasum api/cmd/portainer/portainer-linux-arm > portainer-checksum.txt',
+          'docker run --rm -v $(pwd)/api:/src -e BUILD_GOOS="linux" -e BUILD_GOARCH="arm" sparcs-kaist/whale-builder:cross-platform /src/cmd/whale',
+          'shasum api/cmd/whale/whale-linux-arm > whale-checksum.txt',
           'mkdir -p dist',
-          'mv api/cmd/portainer/portainer-linux-arm dist/portainer'
+          'mv api/cmd/whale/whale-linux-arm dist/whale'
         ].join(' && ')
       },
         buildUnixArm64Binary: {
             command: [
-                'docker run --rm -v $(pwd)/api:/src -e BUILD_GOOS="linux" -e BUILD_GOARCH="arm64" portainer/golang-builder:cross-platform /src/cmd/portainer',
-                'shasum api/cmd/portainer/portainer-linux-arm64 > portainer-checksum.txt',
+                'docker run --rm -v $(pwd)/api:/src -e BUILD_GOOS="linux" -e BUILD_GOARCH="arm64" sparcs-kaist/whale-builder:cross-platform /src/cmd/whale',
+                'shasum api/cmd/whale/whale-linux-arm64 > whale-checksum.txt',
                 'mkdir -p dist',
-                'mv api/cmd/portainer/portainer-linux-arm64 dist/portainer'
+                'mv api/cmd/whale/whale-linux-arm64 dist/whale'
             ].join(' && ')
         },
       buildDarwinBinary: {
         command: [
-          'docker run --rm -v $(pwd)/api:/src -e BUILD_GOOS="darwin" -e BUILD_GOARCH="amd64" portainer/golang-builder:cross-platform /src/cmd/portainer',
-          'shasum api/cmd/portainer/portainer-darwin-amd64 > portainer-checksum.txt',
+          'docker run --rm -v $(pwd)/api:/src -e BUILD_GOOS="darwin" -e BUILD_GOARCH="amd64" sparcs-kaist/whale-builder:cross-platform /src/cmd/whale',
+          'shasum api/cmd/whale/whale-darwin-amd64 > whale-checksum.txt',
           'mkdir -p dist',
-          'mv api/cmd/portainer/portainer-darwin-amd64 dist/portainer'
+          'mv api/cmd/whale/whale-darwin-amd64 dist/whale'
         ].join(' && ')
       },
       buildWindowsBinary: {
         command: [
-          'docker run --rm -v $(pwd)/api:/src -e BUILD_GOOS="windows" -e BUILD_GOARCH="amd64" portainer/golang-builder:cross-platform /src/cmd/portainer',
-          'shasum api/cmd/portainer/portainer-windows-amd64 > portainer-checksum.txt',
+          'docker run --rm -v $(pwd)/api:/src -e BUILD_GOOS="windows" -e BUILD_GOARCH="amd64" sparcs-kaist/whale-builder:cross-platform /src/cmd/whale',
+          'shasum api/cmd/whale/whale-windows-amd64 > whale-checksum.txt',
           'mkdir -p dist',
-          'mv api/cmd/portainer/portainer-windows-amd64 dist/portainer.exe'
+          'mv api/cmd/whale/whale-windows-amd64 dist/whale.exe'
         ].join(' && ')
       },
       run: {
         command: [
-          'docker stop portainer',
-          'docker rm portainer',
-          'docker run --privileged -d -p 9000:9000 -v /tmp/portainer:/data -v /var/run/docker.sock:/var/run/docker.sock --name portainer portainer --no-analytics'
+          'sudo docker stop whale',
+          'sudo docker rm whale',
+          'sudo docker run --privileged -d -p 9000:9000 -v /tmp/whale:/data -v /var/run/docker.sock:/var/run/docker.sock --name whale whale --no-analytics'
         ].join(';')
       },
       runSwarm: {
         command: [
-          'docker stop portainer',
-          'docker rm portainer',
-          'docker run -d -p 9000:9000 --name portainer portainer -H tcp://10.0.7.10:2375 --no-analytics'
+          'docker stop whale',
+          'docker rm whale',
+          'docker run -d -p 9000:9000 --name whale whale -H tcp://10.0.7.10:2375 --no-analytics'
         ].join(';')
       },
       runSwarmLocal: {
         command: [
-          'docker stop portainer',
-          'docker rm portainer',
-          'docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock --name portainer portainer --no-analytics'
+          'docker stop whale',
+          'docker rm whale',
+          'docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock --name whale whale --no-analytics'
         ].join(';')
       },
       runSsl: {
         command: [
-          'docker stop portainer',
-          'docker rm portainer',
-          'docker run -d -p 9000:9000 -v /tmp/portainer:/data -v /tmp/docker-ssl:/certs --name portainer portainer -H tcp://10.0.7.10:2376 --tlsverify --no-analytics'
+          'docker stop whale',
+          'docker rm whale',
+          'docker run -d -p 9000:9000 -v /tmp/whale:/data -v /tmp/docker-ssl:/certs --name whale whale -H tcp://10.0.7.10:2376 --tlsverify --no-analytics'
         ].join(';')
       },
       cleanImages: {
@@ -439,31 +439,31 @@ module.exports = function (grunt) {
     'if': {
       unixBinaryNotExist: {
         options: {
-          executable: 'dist/portainer'
+          executable: 'dist/whale'
         },
         ifFalse: ['shell:buildBinary']
       },
       unixArmBinaryNotExist: {
         options: {
-          executable: 'dist/portainer'
+          executable: 'dist/whale'
         },
         ifFalse: ['shell:buildUnixArmBinary']
       },
       unixArm64BinaryNotExist: {
         options: {
-          executable: 'dist/portainer'
+          executable: 'dist/whale'
         },
         ifFalse: ['shell:buildUnixArm64Binary']
       },
       darwinBinaryNotExist: {
         options: {
-          executable: 'dist/portainer'
+          executable: 'dist/whale'
         },
         ifFalse: ['shell:buildDarwinBinary']
       },
       windowsBinaryNotExist: {
         options: {
-          executable: 'dist/portainer.exe'
+          executable: 'dist/whale.exe'
         },
         ifFalse: ['shell:buildWindowsBinary']
       }

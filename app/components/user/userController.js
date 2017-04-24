@@ -14,7 +14,7 @@ function ($scope, $state, $stateParams, UserService, ModalService, Messages) {
 
   $scope.deleteUser = function() {
     ModalService.confirmDeletion(
-      'Do you want to delete this user? This user will not be able to login into Portainer anymore.',
+      'Do you want to delete this user? This user will not be able to login into Whale anymore.',
       function onConfirm(confirmed) {
         if(!confirmed) { return; }
         deleteUser();

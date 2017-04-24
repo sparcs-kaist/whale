@@ -1,4 +1,4 @@
-angular.module('portainer.services')
+angular.module('whale.services')
 .factory('NetworkService', ['$q', 'Network', function NetworkServiceFactory($q, Network) {
   'use strict';
   var service = {};

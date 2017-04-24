@@ -1,4 +1,4 @@
-angular.module('portainer.services')
+angular.module('whale.services')
 .factory('StateManager', ['$q', 'Config', 'Info', 'InfoHelper', 'Version', 'LocalStorage', function StateManagerFactory($q, Config, Info, InfoHelper, Version, LocalStorage) {
   'use strict';
 

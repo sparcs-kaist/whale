@@ -1,4 +1,4 @@
-angular.module('portainer.services')
+angular.module('whale.services')
 .factory('LineChart', ['Settings', function LineChartFactory(Settings) {
   'use strict';
   return {

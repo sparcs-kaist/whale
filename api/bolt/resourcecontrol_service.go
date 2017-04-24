@@ -1,8 +1,8 @@
 package bolt
 
 import (
-	"github.com/portainer/portainer"
-	"github.com/portainer/portainer/bolt/internal"
+	"github.com/sparcs-kaist/whale"
+	"github.com/sparcs-kaist/whale/bolt/internal"
 
 	"github.com/boltdb/bolt"
 )
@@ -12,18 +12,18 @@ type ResourceControlService struct {
 	store *Store
 }
 
-func getBucketNameByResourceControlType(rcType portainer.ResourceControlType) string {
+func getBucketNameByResourceControlType(rcType whale.ResourceControlType) string {
 	bucketName := containerResourceControlBucketName
-	if rcType == portainer.ServiceResourceControl {
+	if rcType == whale.ServiceResourceControl {
 		bucketName = serviceResourceControlBucketName
-	} else if rcType == portainer.VolumeResourceControl {
+	} else if rcType == whale.VolumeResourceControl {
 		bucketName = volumeResourceControlBucketName
 	}
 	return bucketName
 }
 
 // ResourceControl returns a resource control object by resource ID
-func (service *ResourceControlService) ResourceControl(resourceID string, rcType portainer.ResourceControlType) (*portainer.ResourceControl, error) {
+func (service *ResourceControlService) ResourceControl(resourceID string, rcType whale.ResourceControlType) (*whale.ResourceControl, error) {
 	var data []byte
 	bucketName := getBucketNameByResourceControlType(rcType)
 	err := service.store.db.View(func(tx *bolt.Tx) error {
@@ -44,7 +44,7 @@ func (service *ResourceControlService) ResourceControl(resourceID string, rcType
 		return nil, nil
 	}
 
-	var rc portainer.ResourceControl
+	var rc whale.ResourceControl
 	err = internal.UnmarshalResourceControl(data, &rc)
 	if err != nil {
 		return nil, err
@@ -53,15 +53,15 @@ func (service *ResourceControlService) ResourceControl(resourceID string, rcType
 }
 
 // ResourceControls returns all resource control objects
-func (service *ResourceControlService) ResourceControls(rcType portainer.ResourceControlType) ([]portainer.ResourceControl, error) {
-	var rcs = make([]portainer.ResourceControl, 0)
+func (service *ResourceControlService) ResourceControls(rcType whale.ResourceControlType) ([]whale.ResourceControl, error) {
+	var rcs = make([]whale.ResourceControl, 0)
 	bucketName := getBucketNameByResourceControlType(rcType)
 	err := service.store.db.View(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket([]byte(bucketName))
 
 		cursor := bucket.Cursor()
 		for k, v := cursor.First(); k != nil; k, v = cursor.Next() {
-			var rc portainer.ResourceControl
+			var rc whale.ResourceControl
 			err := internal.UnmarshalResourceControl(v, &rc)
 			if err != nil {
 				return err
@@ -79,7 +79,7 @@ func (service *ResourceControlService) ResourceControls(rcType portainer.Resourc
 }
 
 // CreateResourceControl creates a new resource control
-func (service *ResourceControlService) CreateResourceControl(resourceID string, rc *portainer.ResourceControl, rcType portainer.ResourceControlType) error {
+func (service *ResourceControlService) CreateResourceControl(resourceID string, rc *whale.ResourceControl, rcType whale.ResourceControlType) error {
 	bucketName := getBucketNameByResourceControlType(rcType)
 	return service.store.db.Update(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket([]byte(bucketName))
@@ -97,7 +97,7 @@ func (service *ResourceControlService) CreateResourceControl(resourceID string, 
 }
 
 // DeleteResourceControl deletes a resource control object by resource ID
-func (service *ResourceControlService) DeleteResourceControl(resourceID string, rcType portainer.ResourceControlType) error {
+func (service *ResourceControlService) DeleteResourceControl(resourceID string, rcType whale.ResourceControlType) error {
 	bucketName := getBucketNameByResourceControlType(rcType)
 	return service.store.db.Update(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket([]byte(bucketName))

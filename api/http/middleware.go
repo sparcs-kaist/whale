@@ -3,7 +3,7 @@ package http
 import (
 	"context"
 
-	"github.com/portainer/portainer"
+	"github.com/sparcs-kaist/whale"
 
 	"net/http"
 	"strings"
@@ -12,7 +12,7 @@ import (
 type (
 	// middleWareService represents a service to manage HTTP middlewares
 	middleWareService struct {
-		jwtService   portainer.JWTService
+		jwtService   whale.JWTService
 		authDisabled bool
 	}
 	contextKey int
@@ -22,13 +22,13 @@ const (
 	contextAuthenticationKey contextKey = iota
 )
 
-func extractTokenDataFromRequestContext(request *http.Request) (*portainer.TokenData, error) {
+func extractTokenDataFromRequestContext(request *http.Request) (*whale.TokenData, error) {
 	contextData := request.Context().Value(contextAuthenticationKey)
 	if contextData == nil {
-		return nil, portainer.ErrMissingContextData
+		return nil, whale.ErrMissingContextData
 	}
 
-	tokenData := contextData.(*portainer.TokenData)
+	tokenData := contextData.(*whale.TokenData)
 	return tokenData, nil
 }
 
@@ -68,12 +68,12 @@ func mwCheckAdministratorRole(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		tokenData, err := extractTokenDataFromRequestContext(r)
 		if err != nil {
-			Error(w, portainer.ErrResourceAccessDenied, http.StatusForbidden, nil)
+			Error(w, whale.ErrResourceAccessDenied, http.StatusForbidden, nil)
 			return
 		}
 
-		if tokenData.Role != portainer.AdministratorRole {
-			Error(w, portainer.ErrResourceAccessDenied, http.StatusForbidden, nil)
+		if tokenData.Role != whale.AdministratorRole {
+			Error(w, whale.ErrResourceAccessDenied, http.StatusForbidden, nil)
 			return
 		}
 
@@ -84,7 +84,7 @@ func mwCheckAdministratorRole(next http.Handler) http.Handler {
 // mwCheckAuthentication provides Authentication middleware for handlers
 func (service *middleWareService) mwCheckAuthentication(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		var tokenData *portainer.TokenData
+		var tokenData *whale.TokenData
 		if !service.authDisabled {
 			var token string
 
@@ -96,7 +96,7 @@ func (service *middleWareService) mwCheckAuthentication(next http.Handler) http.
 			}
 
 			if token == "" {
-				Error(w, portainer.ErrUnauthorized, http.StatusUnauthorized, nil)
+				Error(w, whale.ErrUnauthorized, http.StatusUnauthorized, nil)
 				return
 			}
 
@@ -107,8 +107,8 @@ func (service *middleWareService) mwCheckAuthentication(next http.Handler) http.
 				return
 			}
 		} else {
-			tokenData = &portainer.TokenData{
-				Role: portainer.AdministratorRole,
+			tokenData = &whale.TokenData{
+				Role: whale.AdministratorRole,
 			}
 		}
 

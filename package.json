@@ -1,14 +1,11 @@
 {
-  "author": "Portainer.io",
-  "name": "portainer",
-  "homepage": "http://portainer.io",
-  "version": "1.12.4",
+  "author": "SPARCS Whale Team",
+  "name": "whale",
+  "homepage": "https://whale.sparcs.org/",
+  "version": "0.1.0",
   "repository": {
     "type": "git",
-    "url": "git@github.com:portainer/portainer.git"
-  },
-  "bugs": {
-    "url": "https://github.com/portainer/portainer/issues"
+    "url": "git@github.com:sparcs-kaist/whale.git"
   },
   "config": {
     "GA_ID": "UA-84944922-2"
@@ -16,7 +13,7 @@
   "licenses": [
     {
       "type": "Zlib",
-      "url": "https://raw.githubusercontent.com/portainer/portainer/develop/LICENSE"
+      "url": "https://raw.githubusercontent.com/sparcs-kaist/whale/master/LICENSE"
     }
   ],
   "engines": {

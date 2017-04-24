@@ -1,4 +1,4 @@
-angular.module('portainer.rest')
+angular.module('whale.rest')
 .factory('Version', ['$resource', 'Settings', 'EndpointProvider', function VersionFactory($resource, Settings, EndpointProvider) {
     'use strict';
     return $resource(Settings.url + '/:endpointId/version', {

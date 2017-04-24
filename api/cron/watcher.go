@@ -1,19 +1,19 @@
 package cron
 
 import (
-	"github.com/portainer/portainer"
 	"github.com/robfig/cron"
+	"github.com/sparcs-kaist/whale"
 )
 
 // Watcher represents a service for managing crons.
 type Watcher struct {
 	Cron            *cron.Cron
-	EndpointService portainer.EndpointService
+	EndpointService whale.EndpointService
 	syncInterval    string
 }
 
 // NewWatcher initializes a new service.
-func NewWatcher(endpointService portainer.EndpointService, syncInterval string) *Watcher {
+func NewWatcher(endpointService whale.EndpointService, syncInterval string) *Watcher {
 	return &Watcher{
 		Cron:            cron.New(),
 		EndpointService: endpointService,

@@ -1,4 +1,4 @@
-angular.module('portainer.services')
+angular.module('whale.services')
 .factory('InfoService', ['$q', 'Info', function InfoServiceFactory($q, Info) {
   'use strict';
   var service = {};

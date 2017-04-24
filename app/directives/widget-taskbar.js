@@ -1,5 +1,5 @@
 angular
-.module('portainer')
+.module('whale')
 .directive('rdWidgetTaskbar', function rdWidgetTaskbar() {
   var directive = {
     requires: '^rdWidget',

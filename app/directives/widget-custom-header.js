@@ -1,5 +1,5 @@
 angular
-.module('portainer')
+.module('whale')
 .directive('rdWidgetCustomHeader', function rdWidgetCustomHeader() {
   var directive = {
     requires: '^rdWidget',

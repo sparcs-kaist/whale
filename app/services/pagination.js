@@ -1,4 +1,4 @@
-angular.module('portainer.services')
+angular.module('whale.services')
 .factory('Pagination', ['LocalStorage', 'Settings', function PaginationFactory(LocalStorage, Settings) {
   'use strict';
   return {

@@ -1,4 +1,4 @@
-angular.module('portainer.services')
+angular.module('whale.services')
 .factory('Settings', ['DOCKER_ENDPOINT', 'DOCKER_PORT', 'UI_VERSION', 'PAGINATION_MAX_ITEMS', function SettingsFactory(DOCKER_ENDPOINT, DOCKER_PORT, UI_VERSION, PAGINATION_MAX_ITEMS) {
   'use strict';
   var url = DOCKER_ENDPOINT;

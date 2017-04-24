@@ -9,16 +9,16 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/portainer/portainer"
+	"github.com/sparcs-kaist/whale"
 )
 
 type (
 	proxyTransport struct {
 		transport              *http.Transport
-		ResourceControlService portainer.ResourceControlService
+		ResourceControlService whale.ResourceControlService
 	}
 	resourceControlMetadata struct {
-		OwnerID portainer.UserID `json:"OwnerId"`
+		OwnerID whale.UserID `json:"OwnerId"`
 	}
 )
 
@@ -54,18 +54,18 @@ func (p *proxyTransport) handleContainerRequests(request *http.Request, response
 		return err
 	}
 
-	if requestPath == "/containers/prune" && tokenData.Role != portainer.AdministratorRole {
+	if requestPath == "/containers/prune" && tokenData.Role != whale.AdministratorRole {
 		return writeAccessDeniedResponse(response)
 	}
 	if requestPath == "/containers/json" {
-		if tokenData.Role == portainer.AdministratorRole {
+		if tokenData.Role == whale.AdministratorRole {
 			return p.decorateContainerResponse(response)
 		}
 		return p.proxyContainerResponseWithResourceControl(response, tokenData.ID)
 	}
 	// /containers/{id}/action
 	if match, _ := path.Match("/containers/*/*", requestPath); match {
-		if tokenData.Role != portainer.AdministratorRole {
+		if tokenData.Role != whale.AdministratorRole {
 			resourceID := path.Base(path.Dir(requestPath))
 			return p.proxyContainerResponseWithAccessControl(response, tokenData.ID, resourceID)
 		}
@@ -83,21 +83,21 @@ func (p *proxyTransport) handleServiceRequests(request *http.Request, response *
 	}
 
 	if requestPath == "/services" {
-		if tokenData.Role == portainer.AdministratorRole {
+		if tokenData.Role == whale.AdministratorRole {
 			return p.decorateServiceResponse(response)
 		}
 		return p.proxyServiceResponseWithResourceControl(response, tokenData.ID)
 	}
 	// /services/{id}
 	if match, _ := path.Match("/services/*", requestPath); match {
-		if tokenData.Role != portainer.AdministratorRole {
+		if tokenData.Role != whale.AdministratorRole {
 			resourceID := path.Base(requestPath)
 			return p.proxyServiceResponseWithAccessControl(response, tokenData.ID, resourceID)
 		}
 	}
 	// /services/{id}/action
 	if match, _ := path.Match("/services/*/*", requestPath); match {
-		if tokenData.Role != portainer.AdministratorRole {
+		if tokenData.Role != whale.AdministratorRole {
 			resourceID := path.Base(path.Dir(requestPath))
 			return p.proxyServiceResponseWithAccessControl(response, tokenData.ID, resourceID)
 		}
@@ -115,17 +115,17 @@ func (p *proxyTransport) handleVolumeRequests(request *http.Request, response *h
 	}
 
 	if requestPath == "/volumes" {
-		if tokenData.Role == portainer.AdministratorRole {
+		if tokenData.Role == whale.AdministratorRole {
 			return p.decorateVolumeResponse(response)
 		}
 		return p.proxyVolumeResponseWithResourceControl(response, tokenData.ID)
 	}
-	if requestPath == "/volumes/prune" && tokenData.Role != portainer.AdministratorRole {
+	if requestPath == "/volumes/prune" && tokenData.Role != whale.AdministratorRole {
 		return writeAccessDeniedResponse(response)
 	}
 	// /volumes/{name}
 	if match, _ := path.Match("/volumes/*", requestPath); match {
-		if tokenData.Role != portainer.AdministratorRole {
+		if tokenData.Role != whale.AdministratorRole {
 			resourceID := path.Base(requestPath)
 			return p.proxyVolumeResponseWithAccessControl(response, tokenData.ID, resourceID)
 		}
@@ -133,8 +133,8 @@ func (p *proxyTransport) handleVolumeRequests(request *http.Request, response *h
 	return nil
 }
 
-func (p *proxyTransport) proxyContainerResponseWithAccessControl(response *http.Response, userID portainer.UserID, resourceID string) error {
-	rcs, err := p.ResourceControlService.ResourceControls(portainer.ContainerResourceControl)
+func (p *proxyTransport) proxyContainerResponseWithAccessControl(response *http.Response, userID whale.UserID, resourceID string) error {
+	rcs, err := p.ResourceControlService.ResourceControls(whale.ContainerResourceControl)
 	if err != nil {
 		return err
 	}
@@ -151,8 +151,8 @@ func (p *proxyTransport) proxyContainerResponseWithAccessControl(response *http.
 	return nil
 }
 
-func (p *proxyTransport) proxyServiceResponseWithAccessControl(response *http.Response, userID portainer.UserID, resourceID string) error {
-	rcs, err := p.ResourceControlService.ResourceControls(portainer.ServiceResourceControl)
+func (p *proxyTransport) proxyServiceResponseWithAccessControl(response *http.Response, userID whale.UserID, resourceID string) error {
+	rcs, err := p.ResourceControlService.ResourceControls(whale.ServiceResourceControl)
 	if err != nil {
 		return err
 	}
@@ -168,8 +168,8 @@ func (p *proxyTransport) proxyServiceResponseWithAccessControl(response *http.Re
 	return nil
 }
 
-func (p *proxyTransport) proxyVolumeResponseWithAccessControl(response *http.Response, userID portainer.UserID, resourceID string) error {
-	rcs, err := p.ResourceControlService.ResourceControls(portainer.VolumeResourceControl)
+func (p *proxyTransport) proxyVolumeResponseWithAccessControl(response *http.Response, userID whale.UserID, resourceID string) error {
+	rcs, err := p.ResourceControlService.ResourceControls(whale.VolumeResourceControl)
 	if err != nil {
 		return err
 	}
@@ -204,7 +204,7 @@ func (p *proxyTransport) decorateContainerResponse(response *http.Response) erro
 	return nil
 }
 
-func (p *proxyTransport) proxyContainerResponseWithResourceControl(response *http.Response, userID portainer.UserID) error {
+func (p *proxyTransport) proxyContainerResponseWithResourceControl(response *http.Response, userID whale.UserID) error {
 	responseData, err := getResponseData(response)
 	if err != nil {
 		return err
@@ -242,7 +242,7 @@ func (p *proxyTransport) decorateServiceResponse(response *http.Response) error 
 	return nil
 }
 
-func (p *proxyTransport) proxyServiceResponseWithResourceControl(response *http.Response, userID portainer.UserID) error {
+func (p *proxyTransport) proxyServiceResponseWithResourceControl(response *http.Response, userID whale.UserID) error {
 	responseData, err := getResponseData(response)
 	if err != nil {
 		return err
@@ -280,7 +280,7 @@ func (p *proxyTransport) decorateVolumeResponse(response *http.Response) error {
 	return nil
 }
 
-func (p *proxyTransport) proxyVolumeResponseWithResourceControl(response *http.Response, userID portainer.UserID) error {
+func (p *proxyTransport) proxyVolumeResponseWithResourceControl(response *http.Response, userID whale.UserID) error {
 	responseData, err := getResponseData(response)
 	if err != nil {
 		return err
@@ -302,12 +302,12 @@ func (p *proxyTransport) proxyVolumeResponseWithResourceControl(response *http.R
 func (p *proxyTransport) decorateContainers(responseData interface{}) ([]interface{}, error) {
 	responseDataArray := responseData.([]interface{})
 
-	containerRCs, err := p.ResourceControlService.ResourceControls(portainer.ContainerResourceControl)
+	containerRCs, err := p.ResourceControlService.ResourceControls(whale.ContainerResourceControl)
 	if err != nil {
 		return nil, err
 	}
 
-	serviceRCs, err := p.ResourceControlService.ResourceControls(portainer.ServiceResourceControl)
+	serviceRCs, err := p.ResourceControlService.ResourceControls(whale.ServiceResourceControl)
 	if err != nil {
 		return nil, err
 	}
@@ -343,15 +343,15 @@ func (p *proxyTransport) decorateContainers(responseData interface{}) ([]interfa
 	return decoratedResources, nil
 }
 
-func (p *proxyTransport) filterContainers(userID portainer.UserID, responseData interface{}) ([]interface{}, error) {
+func (p *proxyTransport) filterContainers(userID whale.UserID, responseData interface{}) ([]interface{}, error) {
 	responseDataArray := responseData.([]interface{})
 
-	containerRCs, err := p.ResourceControlService.ResourceControls(portainer.ContainerResourceControl)
+	containerRCs, err := p.ResourceControlService.ResourceControls(whale.ContainerResourceControl)
 	if err != nil {
 		return nil, err
 	}
 
-	serviceRCs, err := p.ResourceControlService.ResourceControls(portainer.ServiceResourceControl)
+	serviceRCs, err := p.ResourceControlService.ResourceControls(whale.ServiceResourceControl)
 	if err != nil {
 		return nil, err
 	}
@@ -394,19 +394,19 @@ func (p *proxyTransport) filterContainers(userID portainer.UserID, responseData 
 	return filteredResources, nil
 }
 
-func decorateWithResourceControlMetadata(object map[string]interface{}, userID portainer.UserID) map[string]interface{} {
+func decorateWithResourceControlMetadata(object map[string]interface{}, userID whale.UserID) map[string]interface{} {
 	metadata := make(map[string]interface{})
 	metadata["ResourceControl"] = resourceControlMetadata{
 		OwnerID: userID,
 	}
-	object["Portainer"] = metadata
+	object["Whale"] = metadata
 	return object
 }
 
 func (p *proxyTransport) decorateServices(responseData interface{}) ([]interface{}, error) {
 	responseDataArray := responseData.([]interface{})
 
-	rcs, err := p.ResourceControlService.ResourceControls(portainer.ServiceResourceControl)
+	rcs, err := p.ResourceControlService.ResourceControls(whale.ServiceResourceControl)
 	if err != nil {
 		return nil, err
 	}
@@ -428,10 +428,10 @@ func (p *proxyTransport) decorateServices(responseData interface{}) ([]interface
 	return decoratedResources, nil
 }
 
-func (p *proxyTransport) filterServices(userID portainer.UserID, responseData interface{}) ([]interface{}, error) {
+func (p *proxyTransport) filterServices(userID whale.UserID, responseData interface{}) ([]interface{}, error) {
 	responseDataArray := responseData.([]interface{})
 
-	rcs, err := p.ResourceControlService.ResourceControls(portainer.ServiceResourceControl)
+	rcs, err := p.ResourceControlService.ResourceControls(whale.ServiceResourceControl)
 	if err != nil {
 		return nil, err
 	}
@@ -465,7 +465,7 @@ func (p *proxyTransport) decorateVolumes(responseData interface{}) ([]interface{
 		responseDataArray = jsonObject["Volumes"].([]interface{})
 	}
 
-	rcs, err := p.ResourceControlService.ResourceControls(portainer.VolumeResourceControl)
+	rcs, err := p.ResourceControlService.ResourceControls(whale.VolumeResourceControl)
 	if err != nil {
 		return nil, err
 	}
@@ -487,14 +487,14 @@ func (p *proxyTransport) decorateVolumes(responseData interface{}) ([]interface{
 	return decoratedResources, nil
 }
 
-func (p *proxyTransport) filterVolumes(userID portainer.UserID, responseData interface{}) ([]interface{}, error) {
+func (p *proxyTransport) filterVolumes(userID whale.UserID, responseData interface{}) ([]interface{}, error) {
 	var responseDataArray []interface{}
 	jsonObject := responseData.(map[string]interface{})
 	if jsonObject["Volumes"] != nil {
 		responseDataArray = jsonObject["Volumes"].([]interface{})
 	}
 
-	rcs, err := p.ResourceControlService.ResourceControls(portainer.VolumeResourceControl)
+	rcs, err := p.ResourceControlService.ResourceControls(whale.VolumeResourceControl)
 	if err != nil {
 		return nil, err
 	}
@@ -521,7 +521,7 @@ func (p *proxyTransport) filterVolumes(userID portainer.UserID, responseData int
 	return filteredResources, nil
 }
 
-func getResourceIDsOwnedByUser(userID portainer.UserID, rcs []portainer.ResourceControl) ([]string, error) {
+func getResourceIDsOwnedByUser(userID whale.UserID, rcs []whale.ResourceControl) ([]string, error) {
 	ownedResources := make([]string, 0)
 	for _, rc := range rcs {
 		if rc.OwnerID == userID {
@@ -531,7 +531,7 @@ func getResourceIDsOwnedByUser(userID portainer.UserID, rcs []portainer.Resource
 	return ownedResources, nil
 }
 
-func getOwnedServiceContainers(responseData []interface{}, serviceRCs []portainer.ResourceControl) []interface{} {
+func getOwnedServiceContainers(responseData []interface{}, serviceRCs []whale.ResourceControl) []interface{} {
 	ownedContainers := make([]interface{}, 0)
 	for _, res := range responseData {
 		jsonResource := res.(map[string]map[string]interface{})
@@ -546,7 +546,7 @@ func getOwnedServiceContainers(responseData []interface{}, serviceRCs []portaine
 	return ownedContainers
 }
 
-func getPublicContainers(responseData []interface{}, containerRCs []portainer.ResourceControl, serviceRCs []portainer.ResourceControl) []interface{} {
+func getPublicContainers(responseData []interface{}, containerRCs []whale.ResourceControl, serviceRCs []whale.ResourceControl) []interface{} {
 	publicContainers := make([]interface{}, 0)
 	for _, container := range responseData {
 		jsonObject := container.(map[string]interface{})
@@ -570,7 +570,7 @@ func getPublicContainers(responseData []interface{}, containerRCs []portainer.Re
 	return publicContainers
 }
 
-func getPublicResources(responseData []interface{}, rcs []portainer.ResourceControl, resourceIDKey string) []interface{} {
+func getPublicResources(responseData []interface{}, rcs []whale.ResourceControl, resourceIDKey string) []interface{} {
 	publicResources := make([]interface{}, 0)
 	for _, res := range responseData {
 		jsonResource := res.(map[string]interface{})
@@ -591,7 +591,7 @@ func isStringInArray(target string, array []string) bool {
 	return false
 }
 
-func isResourceIDInRCs(resourceID string, rcs []portainer.ResourceControl) bool {
+func isResourceIDInRCs(resourceID string, rcs []whale.ResourceControl) bool {
 	for _, rc := range rcs {
 		if resourceID == rc.ResourceID {
 			return true
@@ -600,7 +600,7 @@ func isResourceIDInRCs(resourceID string, rcs []portainer.ResourceControl) bool 
 	return false
 }
 
-func getRCByResourceID(resourceID string, rcs []portainer.ResourceControl) *portainer.ResourceControl {
+func getRCByResourceID(resourceID string, rcs []whale.ResourceControl) *whale.ResourceControl {
 	for _, rc := range rcs {
 		if resourceID == rc.ResourceID {
 			return &rc
@@ -633,7 +633,7 @@ func getResponseData(response *http.Response) (interface{}, error) {
 }
 
 func writeAccessDeniedResponse(response *http.Response) error {
-	return rewriteResponse(response, portainer.ErrResourceAccessDenied, 403)
+	return rewriteResponse(response, whale.ErrResourceAccessDenied, 403)
 }
 
 func rewriteContainerResponse(response *http.Response, responseData interface{}) error {

@@ -2,7 +2,7 @@ package bolt
 
 import (
 	"github.com/boltdb/bolt"
-	"github.com/portainer/portainer"
+	"github.com/sparcs-kaist/whale"
 )
 
 type Migrator struct {
@@ -27,7 +27,7 @@ func NewMigrator(store *Store, version int) *Migrator {
 
 func (m *Migrator) Migrate() error {
 
-	// Portainer < 1.12
+	// Whale < 1.12
 	if m.CurrentDBVersion == 0 {
 		err := m.updateAdminUser()
 		if err != nil {
@@ -35,7 +35,7 @@ func (m *Migrator) Migrate() error {
 		}
 	}
 
-	err := m.VersionService.StoreDBVersion(portainer.DBVersion)
+	err := m.VersionService.StoreDBVersion(whale.DBVersion)
 	if err != nil {
 		return err
 	}
@@ -45,10 +45,10 @@ func (m *Migrator) Migrate() error {
 func (m *Migrator) updateAdminUser() error {
 	u, err := m.UserService.UserByUsername("admin")
 	if err == nil {
-		admin := &portainer.User{
+		admin := &whale.User{
 			Username: "admin",
 			Password: u.Password,
-			Role:     portainer.AdministratorRole,
+			Role:     whale.AdministratorRole,
 		}
 		err = m.UserService.CreateUser(admin)
 		if err != nil {
@@ -58,7 +58,7 @@ func (m *Migrator) updateAdminUser() error {
 		if err != nil {
 			return err
 		}
-	} else if err != nil && err != portainer.ErrUserNotFound {
+	} else if err != nil && err != whale.ErrUserNotFound {
 		return err
 	}
 	return nil

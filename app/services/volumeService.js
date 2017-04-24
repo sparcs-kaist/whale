@@ -1,4 +1,4 @@
-angular.module('portainer.services')
+angular.module('whale.services')
 .factory('VolumeService', ['$q', 'Volume', 'VolumeHelper', function VolumeServiceFactory($q, Volume, VolumeHelper) {
   'use strict';
   var service = {};

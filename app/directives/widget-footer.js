@@ -1,5 +1,5 @@
 angular
-.module('portainer')
+.module('whale')
 .directive('rdWidgetFooter', function rdWidgetFooter() {
   var directive = {
     requires: '^rdWidget',

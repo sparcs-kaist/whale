@@ -1,4 +1,4 @@
-angular.module('portainer.services')
+angular.module('whale.services')
 .factory('EntityListService', [function EntityListServiceFactory() {
   'use strict';
   return {

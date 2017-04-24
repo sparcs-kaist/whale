@@ -3,7 +3,7 @@ package bolt
 import (
 	"strconv"
 
-	"github.com/portainer/portainer"
+	"github.com/sparcs-kaist/whale"
 
 	"github.com/boltdb/bolt"
 )
@@ -24,7 +24,7 @@ func (service *VersionService) DBVersion() (int, error) {
 		bucket := tx.Bucket([]byte(versionBucketName))
 		value := bucket.Get([]byte(DBVersionKey))
 		if value == nil {
-			return portainer.ErrDBVersionNotFound
+			return whale.ErrDBVersionNotFound
 		}
 
 		data = make([]byte, len(value))

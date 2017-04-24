@@ -8,4 +8,4 @@ WORKDIR /
 
 EXPOSE 9000
 
-ENTRYPOINT ["/portainer"]
+ENTRYPOINT ["/whale"]

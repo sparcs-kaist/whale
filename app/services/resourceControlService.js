@@ -1,4 +1,4 @@
-angular.module('portainer.services')
+angular.module('whale.services')
 .factory('ResourceControlService', ['$q', 'ResourceControl', function ResourceControlServiceFactory($q, ResourceControl) {
   'use strict';
   var service = {};

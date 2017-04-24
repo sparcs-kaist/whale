@@ -6,7 +6,7 @@ const (
 	defaultBindAddress     = ":9000"
 	defaultDataDirectory   = "/data"
 	defaultAssetsDirectory = "."
-	defaultTemplatesURL    = "https://raw.githubusercontent.com/portainer/templates/master/templates.json"
+	defaultTemplatesURL    = "https://raw.githubusercontent.com/sparcs-kaist/templates/master/templates.json"
 	defaultNoAuth          = "false"
 	defaultNoAnalytics     = "false"
 	defaultTLSVerify       = "false"

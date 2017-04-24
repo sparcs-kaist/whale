@@ -1,4 +1,4 @@
-angular.module('portainer.services')
+angular.module('whale.services')
 .factory('LocalStorage', ['localStorageService', function LocalStorageFactory(localStorageService) {
   'use strict';
   return {

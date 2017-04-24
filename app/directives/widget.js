@@ -1,5 +1,5 @@
 angular
-.module('portainer')
+.module('whale')
 .directive('rdWidget', function rdWidget() {
   var directive = {
     scope: {

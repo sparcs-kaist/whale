@@ -78,11 +78,11 @@ function ServiceViewModel(data, runningTasks, nodes) {
   this.Scale = false;
   this.EditName = false;
 
-  if (data.Portainer) {
+  if (data.Whale) {
     this.Metadata = {};
-    if (data.Portainer.ResourceControl) {
+    if (data.Whale.ResourceControl) {
       this.Metadata.ResourceControl = {
-        OwnerId: data.Portainer.ResourceControl.OwnerId
+        OwnerId: data.Whale.ResourceControl.OwnerId
       };
     }
   }

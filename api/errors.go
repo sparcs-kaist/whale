@@ -1,4 +1,4 @@
-package portainer
+package whale
 
 // General errors.
 const (
