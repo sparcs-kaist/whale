@@ -64,6 +64,8 @@ type Server struct {
 	BindAddressHTTPS            string
 	HTTPEnabled                 bool
 	AssetsPath                  string
+	SSOID                       string
+	SSOKey                      string
 	Status                      *portainer.Status
 	ReverseTunnelService        portainer.ReverseTunnelService
 	ComposeStackManager         portainer.ComposeStackManager
@@ -105,6 +107,8 @@ func (server *Server) Start() error {
 	authHandler.DataStore = server.DataStore
 	authHandler.CryptoService = server.CryptoService
 	authHandler.JWTService = server.JWTService
+	authHandler.EndpointService = server.EndpointService
+	authHandler.ssoClient = NewSSOClient(server.SSOID, server.SSOKey)
 	authHandler.LDAPService = server.LDAPService
 	authHandler.ProxyManager = server.ProxyManager
 	authHandler.KubernetesTokenCacheManager = kubernetesTokenCacheManager

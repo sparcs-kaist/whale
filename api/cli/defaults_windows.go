@@ -12,6 +12,8 @@ const (
 	defaultTLSCACertPath       = "C:\\certs\\ca.pem"
 	defaultTLSCertPath         = "C:\\certs\\cert.pem"
 	defaultTLSKeyPath          = "C:\\certs\\key.pem"
+	defaultSSOID               = ""
+	defaultSSOKey              = ""
 	defaultHTTPDisabled        = "false"
 	defaultSSL                 = "false"
 	defaultSSLCertPath         = "C:\\certs\\portainer.crt"
