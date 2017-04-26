@@ -146,6 +146,8 @@ func main() {
 		Settings:               settings,
 		TemplatesURL:           *flags.Templates,
 		AuthDisabled:           *flags.NoAuth,
+		SSOID:                  *flags.SSOID,
+		SSOKey:                 *flags.SSOKey,
 		EndpointManagement:     authorizeEndpointMgmt,
 		UserService:            store.UserService,
 		EndpointService:        store.EndpointService,

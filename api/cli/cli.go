@@ -42,6 +42,8 @@ func (*Service) ParseFlags(version string) (*whale.CLIFlags, error) {
 		TLSCacert:         kingpin.Flag("tlscacert", "Path to the CA").Default(defaultTLSCACertPath).String(),
 		TLSCert:           kingpin.Flag("tlscert", "Path to the TLS certificate file").Default(defaultTLSCertPath).String(),
 		TLSKey:            kingpin.Flag("tlskey", "Path to the TLS key").Default(defaultTLSKeyPath).String(),
+		SSOID:             kingpin.Flag("ssoid", "SPARCS SSO ID").Default(defaultSSOID).String(),
+		SSOKey:            kingpin.Flag("ssokey", "SPRACS SSO Key").Default(defaultSSOKey).String(),
 	}
 
 	kingpin.Parse()

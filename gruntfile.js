@@ -362,11 +362,11 @@ module.exports = function (grunt) {
     },
     shell: {
       buildImage: {
-        command: 'sudo docker build --rm -t whale -f build/linux/Dockerfile .'
+        command: 'docker build --rm -t whale -f build/linux/Dockerfile .'
       },
       buildBinary: {
         command: [
-          'sudo docker run --rm -v $(pwd)/api:/src sparcs-kaist/whale-builder /src/cmd/whale',
+          'docker run --rm -v $(pwd)/api:/src sparcs-kaist/whale-builder /src/cmd/whale',
           'shasum api/cmd/whale/whale > whale-checksum.txt',
           'mkdir -p dist',
           'mv api/cmd/whale/whale dist/'
@@ -406,9 +406,9 @@ module.exports = function (grunt) {
       },
       run: {
         command: [
-          'sudo docker stop whale',
-          'sudo docker rm whale',
-          'sudo docker run --privileged -d -p 9000:9000 -v /tmp/whale:/data -v /var/run/docker.sock:/var/run/docker.sock --name whale whale --no-analytics'
+          'docker stop whale',
+          'docker rm whale',
+          'docker run --privileged -d -p 9000:9000 -v /tmp/whale:/data -v /var/run/docker.sock:/var/run/docker.sock --name whale whale --no-analytics'
         ].join(';')
       },
       runSwarm: {

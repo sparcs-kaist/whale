@@ -11,6 +11,8 @@ type Server struct {
 	BindAddress            string
 	AssetsPath             string
 	AuthDisabled           bool
+	SSOID                  string
+	SSOKey                 string
 	EndpointManagement     bool
 	UserService            whale.UserService
 	EndpointService        whale.EndpointService
@@ -34,6 +36,8 @@ func (server *Server) Start() error {
 	authHandler.UserService = server.UserService
 	authHandler.CryptoService = server.CryptoService
 	authHandler.JWTService = server.JWTService
+	authHandler.EndpointService = server.EndpointService
+	authHandler.ssoClient = NewSSOClient(server.SSOID, server.SSOKey)
 	authHandler.authDisabled = server.AuthDisabled
 	var userHandler = NewUserHandler(middleWareService)
 	userHandler.UserService = server.UserService

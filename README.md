@@ -1,6 +1,6 @@
 # SPARCS Whale
 
-**_SPARCS Whale_**, a simple docker management UI that built on **_Portainer__**.
+**_SPARCS Whale_**, a simple docker management UI that built on **_Portainer_**.
 
 **_SPARCS Whale_** is a lightweight management UI which allows you to **easily** manage your Docker host or Swarm cluster.
 

@@ -6,7 +6,7 @@ const (
 	defaultBindAddress     = ":9000"
 	defaultDataDirectory   = "/data"
 	defaultAssetsDirectory = "."
-	defaultTemplatesURL    = "https://raw.githubusercontent.com/sparcs-kaist/templates/master/templates.json"
+	defaultTemplatesURL    = "https://raw.githubusercontent.com/sparcs-kaist/whale/master/templates.json"
 	defaultNoAuth          = "false"
 	defaultNoAnalytics     = "false"
 	defaultTLSVerify       = "false"
@@ -14,4 +14,6 @@ const (
 	defaultTLSCertPath     = "/certs/cert.pem"
 	defaultTLSKeyPath      = "/certs/key.pem"
 	defaultSyncInterval    = "60s"
+	defaultSSOID           = ""
+	defaultSSOKey          = ""
 )

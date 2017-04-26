@@ -1,0 +1,346 @@
+[
+  {
+    "title": "Registry",
+    "description": "Docker image registry",
+    "logo": "https://cloudinovasi.id/assets/img/logos/registry.png",
+    "image": "registry:latest",
+    "ports": [
+      "5000/tcp"
+    ],
+    "volumes": ["/var/lib/registry"]
+  },
+  {
+    "title": "Nginx",
+    "description": "High performance web server",
+    "logo": "https://cloudinovasi.id/assets/img/logos/nginx.png",
+    "image": "nginx:latest",
+    "ports": [
+      "80/tcp",
+      "443/tcp"
+    ],
+    "volumes": ["/etc/nginx", "/var/www/html"]
+  },
+  {
+    "title": "Httpd",
+    "description": "Open-source HTTP server",
+    "logo": "https://cloudinovasi.id/assets/img/logos/httpd.png",
+    "image": "httpd:latest",
+    "ports": [
+      "80/tcp"
+    ],
+    "volumes": ["/usr/local/apache2/htdocs/"]
+  },
+  {
+    "title": "MySQL",
+    "description": "The most popular open-source database",
+    "logo": "https://cloudinovasi.id/assets/img/logos/mysql.png",
+    "image": "mysql:latest",
+    "env": [
+      {
+        "name": "MYSQL_ROOT_PASSWORD",
+        "label": "Root password"
+      }
+    ],
+    "ports": [
+      "3306/tcp"
+    ],
+    "volumes": ["/var/lib/mysql"]
+  },
+  {
+    "title": "MariaDB",
+    "description": "Performance beyond MySQL",
+    "logo": "https://cloudinovasi.id/assets/img/logos/mariadb.png",
+    "image": "mariadb:latest",
+    "env": [
+      {
+        "name": "MYSQL_ROOT_PASSWORD",
+        "label": "Root password"
+      }
+    ],
+    "ports": [
+      "3306/tcp"
+    ],
+    "volumes": ["/var/lib/mysql"]
+  },
+  {
+    "title": "PostgreSQL",
+    "description": "The most advanced open-source database",
+    "logo": "https://cloudinovasi.id/assets/img/logos/postgres.png",
+    "image": "postgres:latest",
+    "env": [
+      {
+        "name": "POSTGRES_USER",
+        "label": "Superuser"
+      },
+      {
+        "name": "POSTGRES_PASSWORD",
+        "label": "Superuser password"
+      }
+    ],
+    "ports": [
+      "5432/tcp"
+    ],
+    "volumes": ["/var/lib/postgresql/data"]
+  },
+  {
+    "title": "Mongo",
+    "description": "Open-source document-oriented database",
+    "logo": "https://cloudinovasi.id/assets/img/logos/mongo.png",
+    "image": "mongo:latest",
+    "ports": [
+      "27017/tcp"
+    ],
+    "volumes": ["/data/db"]
+  },
+  {
+    "title": "CockroachDB",
+    "description": "An open source, survivable, strongly consistent, scale-out SQL database",
+    "logo": "https://cloudinovasi.id/assets/img/logos/cockroachdb.png",
+    "image": "cockroachdb/cockroach:latest",
+    "ports": [
+      "26257/tcp",
+      "8080/tcp"
+    ],
+    "volumes": ["/cockroach/cockroach-data"],
+    "command": "start --insecure"
+  },
+  {
+    "title": "Elasticsearch",
+    "description": "Open-source search and analytics engine",
+    "logo": "https://cloudinovasi.id/assets/img/logos/elasticsearch.png",
+    "image": "elasticsearch:latest",
+    "ports": [
+      "9200/tcp",
+      "9300/tcp"
+    ],
+    "volumes": ["/usr/share/elasticsearch/data"]
+  },
+  {
+   "title": "Minio",
+   "description": "A distributed object storage server built for cloud applications and devops",
+   "logo": "https://cloudinovasi.id/assets/img/logos/minio.png",
+   "image": "minio/minio:latest",
+   "ports": [
+     "9000/tcp"
+   ],
+   "env": [
+     {
+       "name": "MINIO_ACCESS_KEY",
+       "label": "Minio access key"
+     },
+     {
+       "name": "MINIO_SECRET_KEY",
+       "label": "Minio secret key"
+     }
+   ],
+   "volumes": ["/export", "/root/.minio"],
+   "command": "server /export"
+ },
+  {
+    "title": "Solr",
+    "description": "Open-source enterprise search platform",
+    "logo": "https://cloudinovasi.id/assets/img/logos/solr.png",
+    "image": "solr:latest",
+    "ports": [
+      "8983/tcp"
+    ],
+    "volumes": ["/opt/solr/mydata"]
+  },
+  {
+    "title": "Redis",
+    "description": "Open-source in-memory data structure store",
+    "logo": "https://cloudinovasi.id/assets/img/logos/redis.png",
+    "image": "redis:latest",
+    "ports": [
+      "6379/tcp"
+    ],
+    "volumes": ["/data"]
+  },
+  {
+    "title": "RabbitMQ",
+    "description": "Highly reliable enterprise messaging system",
+    "logo": "https://cloudinovasi.id/assets/img/logos/rabbitmq.png",
+    "image": "rabbitmq:latest",
+    "ports": [
+      "5671/tcp",
+      "5672/tcp"
+    ],
+    "volumes": ["/var/lib/rabbitmq"]
+  },
+  {
+    "title": "WordPress",
+    "description": "A free and open-source CMS",
+    "logo": "https://cloudinovasi.id/assets/img/logos/wordpress.png",
+    "image": "wordpress:latest",
+    "env": [
+      {
+        "name": "WORDPRESS_DB_HOST",
+        "label": "MySQL database host",
+        "type": "container"
+      },
+      {
+        "name": "WORDPRESS_DB_PASSWORD",
+        "label": "Database password"
+      }
+    ],
+    "ports": [
+      "80/tcp"
+    ],
+    "volumes": ["/var/www/html"]
+  },
+  {
+    "title": "Joomla",
+    "description": "Another free and open-source CMS",
+    "logo": "https://cloudinovasi.id/assets/img/logos/joomla.png",
+    "image": "joomla:latest",
+    "env": [
+      {
+        "name": "JOOMLA_DB_HOST",
+        "label": "MySQL database host",
+        "type": "container"
+      },
+      {
+        "name": "JOOMLA_DB_PASSWORD",
+        "label": "Database password"
+      }
+    ],
+    "ports": [
+      "80/tcp"
+    ],
+    "volumes": ["/var/www/html"]
+  },
+  {
+    "title": "Drupal",
+    "description": "Open-source content management framework",
+    "logo": "https://cloudinovasi.id/assets/img/logos/drupal.png",
+    "image": "drupal:latest",
+    "ports": [
+      "80/tcp"
+    ],
+    "volumes": ["/var/www/html"]
+  },
+  {
+    "title": "Plone",
+    "description": "A free and open-source CMS built on top of Zope",
+    "logo": "https://cloudinovasi.id/assets/img/logos/plone.png",
+    "image": "plone:latest",
+    "ports": [
+      "8080/tcp"
+    ],
+    "volumes": ["/data"]
+  },
+  {
+    "title": "Magento 2",
+    "description": "Open-source e-commerce platform",
+    "logo": "https://cloudinovasi.id/assets/img/logos/magento.png",
+    "image": "alankent/gsd:latest",
+    "ports": [
+      "80/tcp",
+      "3000/tcp",
+      "3001/tcp"
+    ],
+    "volumes": ["/var/www/html/"]
+  },
+  {
+    "title": "Mautic",
+    "description": "Open-source marketing automation platform",
+    "logo": "https://cloudinovasi.id/assets/img/logos/mautic.png",
+    "image": "mautic/mautic:latest",
+    "env": [
+      {
+        "name": "MAUTIC_DB_HOST",
+        "label": "MySQL database host",
+        "type": "container"
+      },
+      {
+        "name": "MAUTIC_DB_PASSWORD",
+        "label": "Database password"
+      }
+    ],
+    "ports": [
+      "80/tcp"
+    ],
+    "volumes": ["/var/www/html"]
+  },
+  {
+    "title": "Wowza",
+    "description": "Streaming media server",
+    "logo": "https://cloudinovasi.id/assets/img/logos/wowza.png",
+    "image": "sameersbn/wowza:4.1.2-8",
+    "env": [
+      {
+        "name": "WOWZA_ACCEPT_LICENSE",
+        "label": "Agree to Wowza EULA",
+        "set": "yes"
+      },
+      {
+        "name": "WOWZA_KEY",
+        "label": "License key"
+      }
+    ],
+    "ports": [
+      "1935/tcp",
+      "8086/tcp",
+      "8087/tcp",
+      "8088/tcp"
+    ],
+    "volumes": ["/var/lib/wowza"]
+  },
+  {
+    "title": "Jenkins",
+    "description": "Open-source continuous integration tool",
+    "logo": "https://cloudinovasi.id/assets/img/logos/jenkins.png",
+    "image": "jenkins:latest",
+    "ports": [
+      "8080/tcp",
+      "50000/tcp"
+    ],
+    "volumes": ["/var/jenkins_home"]
+  },
+  {
+    "title": "Redmine",
+    "description": "Open-source project management tool",
+    "logo": "https://cloudinovasi.id/assets/img/logos/redmine.png",
+    "image": "redmine:latest",
+    "ports": [
+      "3000/tcp"
+    ],
+    "volumes": ["/usr/src/redmine/files"]
+  },
+  {
+    "title": "Odoo",
+    "description": "Open-source business apps",
+    "logo": "https://cloudinovasi.id/assets/img/logos/odoo.png",
+    "image": "odoo:latest",
+    "env": [
+      {
+        "name": "HOST",
+        "label": "PostgreSQL database host",
+        "type": "container"
+      },
+      {
+        "name": "USER",
+        "label": "Database user"
+      },
+      {
+        "name": "PASSWORD",
+        "label": "Database password"
+      }
+    ],
+    "ports": [
+      "8069/tcp"
+    ],
+    "volumes": ["/var/lib/odoo", "/mnt/extra-addons"]
+  },
+  {
+    "title": "Urbackup",
+    "description": "Open-source network backup",
+    "note": "This application web interface is exposed on the port 55414 inside the container.",
+    "logo": "https://cloudinovasi.id/assets/img/logos/urbackup.png",
+    "image": "cfstras/urbackup",
+    "ports": [
+      "55413/tcp", "55414/tcp", "55415/tcp", "35622/tcp"
+    ],
+    "volumes": ["/var/urbackup"]
+  }
+]

@@ -28,6 +28,8 @@ type (
 		TLSCacert         *string
 		TLSCert           *string
 		TLSKey            *string
+		SSOID             *string
+		SSOKey            *string
 	}
 
 	// Settings represents Whale settings.

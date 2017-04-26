@@ -37,6 +37,12 @@ angular.module('whale.services')
     },
     clean: function() {
       localStorageService.clearAll();
+    },
+    storeSSOState: function(state) {
+      localStorageService.set('SSO_STATE', state);
+    },
+    getSSOState: function() {
+      return localStorageService.get('SSO_STATE');
     }
   };
 }]);

@@ -67,6 +67,10 @@
       <div class="panel panel-default" ng-if="!initPassword">
         <div class="panel-body">
           <!-- login form -->
+          <h4 class="text-center text-danger">Authorized Users Only</h4>
+          <p><small>SPARCS Whale is an infrastructure service for SPARCS members. Everything will be recorded including your IP. If you are a member of SPARCS, please login using your SPARCS SSO account.</small></p>
+          <p class="text-center"><button type="submit" class="btn btn-primary" ng-click="initSSOAuth()"><i class="fa fa-sign-in" aria-hidden="true"></i> SPARCS SSO Login</button></p>
+          <hr>
           <form class="login-form form-horizontal" enctype="multipart/form-data" method="POST">
             <!-- username input -->
             <div class="input-group">
@@ -86,7 +90,7 @@
                 <p class="pull-left text-danger" ng-if="authData.error" style="margin: 5px;">
                   <i class="fa fa-exclamation-circle" aria-hidden="true"></i> {{ authData.error }}
                 </p>
-                <button type="submit" class="btn btn-primary pull-right" ng-click="authenticateUser()"><i class="fa fa-sign-in" aria-hidden="true"></i> Login</button>
+                <button type="submit" class="btn btn-default pull-right" ng-click="authenticateUser()"><i class="fa fa-sign-in" aria-hidden="true"></i> Local Login</button>
               </div>
             </div>
             <!-- !login button -->

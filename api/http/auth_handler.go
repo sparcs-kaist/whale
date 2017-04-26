@@ -15,11 +15,13 @@ import (
 // AuthHandler represents an HTTP API handler for managing authentication.
 type AuthHandler struct {
 	*mux.Router
-	Logger        *log.Logger
-	authDisabled  bool
-	UserService   whale.UserService
-	CryptoService whale.CryptoService
-	JWTService    whale.JWTService
+	Logger          *log.Logger
+	authDisabled    bool
+	ssoClient       *SSOClient
+	UserService     whale.UserService
+	CryptoService   whale.CryptoService
+	JWTService      whale.JWTService
+	EndpointService whale.EndpointService
 }
 
 const (
@@ -38,9 +40,11 @@ func NewAuthHandler(mw *middleWareService) *AuthHandler {
 		Router: mux.NewRouter(),
 		Logger: log.New(os.Stderr, "", log.LstdFlags),
 	}
-	h.Handle("/auth",
-		mw.public(http.HandlerFunc(h.handlePostAuth)))
-
+	h.Handle("/auth/local", mw.public(http.HandlerFunc(h.handlePostAuth)))
+	h.Handle("/auth/sso",
+		mw.public(http.HandlerFunc(h.handleSSOAuthInit))).Methods(http.MethodGet)
+	h.Handle("/auth/sso",
+		mw.public(http.HandlerFunc(h.handleSSOAuth))).Methods(http.MethodPost)
 	return h
 }
 
@@ -99,6 +103,98 @@ func (handler *AuthHandler) handlePostAuth(w http.ResponseWriter, r *http.Reques
 	encodeJSON(w, &postAuthResponse{JWT: token}, handler.Logger)
 }
 
+func (handler *AuthHandler) handleSSOAuthInit(w http.ResponseWriter, r *http.Request) {
+	if handler.authDisabled {
+		Error(w, ErrAuthDisabled, http.StatusServiceUnavailable, handler.Logger)
+		return
+	}
+
+	params, err := handler.ssoClient.GetLoginParams()
+	if err != nil {
+		Error(w, err, http.StatusInternalServerError, handler.Logger)
+		return
+	}
+
+	encodeJSON(w, &ssoAuthURI{URI: params.URI, State: params.State}, handler.Logger)
+}
+
+func (handler *AuthHandler) handleSSOAuth(w http.ResponseWriter, r *http.Request) {
+	if handler.authDisabled {
+		Error(w, ErrAuthDisabled, http.StatusServiceUnavailable, handler.Logger)
+		return
+	}
+
+	var req ssoAuthRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		Error(w, ErrInvalidJSON, http.StatusBadRequest, handler.Logger)
+		return
+	}
+
+	_, err := govalidator.ValidateStruct(req)
+	if err != nil {
+		Error(w, ErrInvalidRequestFormat, http.StatusBadRequest, handler.Logger)
+		return
+	}
+
+	info, err := handler.ssoClient.GetUserInfo(req.Code)
+	if err != nil {
+		Error(w, err, http.StatusBadRequest, handler.Logger)
+		return
+	}
+
+	username := info["sparcs_id"].(string)
+	if username == "" {
+		Error(w, err, http.StatusBadRequest, handler.Logger)
+		return
+	}
+
+	u, err := handler.UserService.UserByUsername(username)
+	if err == whale.ErrUserNotFound {
+		u = &whale.User{
+			Username: username,
+			Password: "",
+			Role:     2,
+		}
+
+		err = handler.UserService.CreateUser(u)
+		if err != nil {
+			Error(w, err, http.StatusInternalServerError, handler.Logger)
+			return
+		}
+
+		endpoints, err := handler.EndpointService.Endpoints()
+		if err != nil {
+			Error(w, err, http.StatusInternalServerError, handler.Logger)
+			return
+		}
+
+		for _, endpoint := range endpoints {
+			endpoint.AuthorizedUsers = append(endpoint.AuthorizedUsers, u.ID)
+			err = handler.EndpointService.UpdateEndpoint(endpoint.ID, &endpoint)
+			if err != nil {
+				Error(w, err, http.StatusInternalServerError, handler.Logger)
+				return
+			}
+		}
+	} else if err != nil {
+		Error(w, err, http.StatusInternalServerError, handler.Logger)
+		return
+	}
+
+	tokenData := &whale.TokenData{
+		ID:       u.ID,
+		Username: u.Username,
+		Role:     u.Role,
+	}
+	token, err := handler.JWTService.GenerateToken(tokenData)
+	if err != nil {
+		Error(w, err, http.StatusInternalServerError, handler.Logger)
+		return
+	}
+
+	encodeJSON(w, &postAuthResponse{JWT: token}, handler.Logger)
+}
+
 type postAuthRequest struct {
 	Username string `valid:"alphanum,required"`
 	Password string `valid:"required"`
@@ -106,4 +202,13 @@ type postAuthRequest struct {
 
 type postAuthResponse struct {
 	JWT string `json:"jwt"`
+}
+
+type ssoAuthURI struct {
+	URI   string `json:"uri"`
+	State string `json:"state"`
+}
+
+type ssoAuthRequest struct {
+	Code string `json:"code"`
 }
