@@ -30,6 +30,9 @@ module.exports = function (grunt) {
     'usemin',
     'clean:tmp'
   ]);
+  grunt.registerTask('build-image', [
+    'shell:buildImage',
+  ]);
   grunt.registerTask('release', [
     'clean:all',
     'if:unixBinaryNotExist',
@@ -362,7 +365,7 @@ module.exports = function (grunt) {
     },
     shell: {
       buildImage: {
-        command: 'docker build --rm -t whale -f build/linux/Dockerfile .'
+        command: 'docker build --rm -t sparcs-kaist/whale -f build/linux/Dockerfile .'
       },
       buildBinary: {
         command: [
