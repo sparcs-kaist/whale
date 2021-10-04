@@ -1,7 +1,7 @@
 package http
 
 import (
-	"github.com/portainer/portainer"
+	portainer "github.com/portainer/portainer/api"
 
 	"encoding/json"
 	"log"
