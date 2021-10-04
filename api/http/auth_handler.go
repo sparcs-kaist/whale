@@ -1,7 +1,7 @@
 package http
 
 import (
-	"github.com/sparcs-kaist/whale"
+	"github.com/portainer/portainer"
 
 	"encoding/json"
 	"log"
@@ -18,20 +18,20 @@ type AuthHandler struct {
 	Logger          *log.Logger
 	authDisabled    bool
 	ssoClient       *SSOClient
-	UserService     whale.UserService
-	CryptoService   whale.CryptoService
-	JWTService      whale.JWTService
-	EndpointService whale.EndpointService
+	UserService     portainer.UserService
+	CryptoService   portainer.CryptoService
+	JWTService      portainer.JWTService
+	EndpointService portainer.EndpointService
 }
 
 const (
 	// ErrInvalidCredentialsFormat is an error raised when credentials format is not valid
-	ErrInvalidCredentialsFormat = whale.Error("Invalid credentials format")
+	ErrInvalidCredentialsFormat = portainer.Error("Invalid credentials format")
 	// ErrInvalidCredentials is an error raised when credentials for a user are invalid
-	ErrInvalidCredentials = whale.Error("Invalid credentials")
+	ErrInvalidCredentials = portainer.Error("Invalid credentials")
 	// ErrAuthDisabled is an error raised when trying to access the authentication endpoints
 	// when the server has been started with the --no-auth flag
-	ErrAuthDisabled = whale.Error("Authentication is disabled")
+	ErrAuthDisabled = portainer.Error("Authentication is disabled")
 )
 
 // NewAuthHandler returns a new instance of AuthHandler.
@@ -75,7 +75,7 @@ func (handler *AuthHandler) handlePostAuth(w http.ResponseWriter, r *http.Reques
 	var password = req.Password
 
 	u, err := handler.UserService.UserByUsername(username)
-	if err == whale.ErrUserNotFound {
+	if err == portainer.ErrUserNotFound {
 		Error(w, err, http.StatusNotFound, handler.Logger)
 		return
 	} else if err != nil {
@@ -89,7 +89,7 @@ func (handler *AuthHandler) handlePostAuth(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	tokenData := &whale.TokenData{
+	tokenData :=  portainer.TokenData{
 		ID:       u.ID,
 		Username: u.Username,
 		Role:     u.Role,
@@ -149,8 +149,8 @@ func (handler *AuthHandler) handleSSOAuth(w http.ResponseWriter, r *http.Request
 	}
 
 	u, err := handler.UserService.UserByUsername(username)
-	if err == whale.ErrUserNotFound {
-		u = &whale.User{
+	if err == portainer.ErrUserNotFound {
+		u =  portainer.User{
 			Username: username,
 			Password: "",
 			Role:     2,
@@ -181,7 +181,7 @@ func (handler *AuthHandler) handleSSOAuth(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	tokenData := &whale.TokenData{
+	tokenData :=  portainer.TokenData{
 		ID:       u.ID,
 		Username: u.Username,
 		Role:     u.Role,
